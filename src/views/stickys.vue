@@ -12,7 +12,7 @@
       </div>
       <actionsBar v-on:updateNote="updateNote"/>
       <confirmDelete v-on:deleteSticky="deleteSticky"/>
-
+        <addBt/>
   </div>
 </template>
 
@@ -20,6 +20,7 @@
 import note from '@/components/note.vue'
 import actionsBar from '@/components/actionsBar.vue'
 import addSticky from '@/components/addSticky.vue'
+import addBt from '@/components/addBt.vue'
 import confirmDelete from '@/components/confirmDelete.vue'
 export default {
     name:"stickys",
@@ -54,7 +55,7 @@ export default {
                 }
             })
 
-            document.body.classList.remove('expanded')
+            document.body.classList.remove('note-expanded')
             document.querySelector('.expand').classList.remove('expand');
 
             let notesStorage;
@@ -79,6 +80,7 @@ export default {
         addSticky,
         actionsBar,
         confirmDelete,
+        addBt
     },
 
 }
@@ -94,32 +96,34 @@ export default {
         width: 100%;
         top:0;
         z-index: 2;
-        background: #010122;
+        background: #f5008f;
+        box-shadow: 2px 2px 10px rgba(61, 61, 61, 0.582);
         padding-bottom: 2px;
     }
     .titleArea p{
-        color: white;
+        color: rgb(255, 255, 255);
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         position: absolute;
         left: 10px;
         font-size: 1.5rem;
         top:8px;
-        font-weight: 200;
+        font-weight: 300;
 
     }
     .notesContainer{
-        margin-top: 45px;
+        margin-top: 50px;
         /* margin-bottom: 90px; */
     }
     .more{
         width: 50px;
         position: absolute;
         right: 10px;
-        top:18px
+        top:18px;
+        display: none;
     }
     .addSticky{
         top:-800px;      
-        transition: 0.6s all;
+        transition: 0.2s  all;
     }
     .deleteTarget{
         animation: slideright;

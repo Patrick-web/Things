@@ -19,7 +19,7 @@ created(){
     const colapseBt = document.querySelector('#colapse');
 
     colapseBt.addEventListener('click',(e)=>{
-      document.body.classList.remove('expanded')
+      document.body.classList.remove('note-expanded')
       document.querySelector('.expand').classList.remove('expand')
       const updateBt = document.querySelector('#updateNote');
       updateBt.style.transform = "scale(0)"
@@ -42,5 +42,33 @@ created(){
 #updateNote{
   transform: scale(0);
   transition: 0.1s;
+}
+.actionsContainer{
+  position: fixed;
+  margin-left: 15px;
+  right: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  top: 100vh;/*78vh*/
+  left: 0;
+  background:#cbeaf7;
+  text-align: center;
+  padding: 10px;
+  border-radius: 3px;
+  z-index: 3;
+  transition: 0.3s ease-in all;
+  height: 10vh;
+
+}
+.note-expanded .actionsContainer{
+  top:88vh;
+}
+.actionsContainer img{
+  width: 40px;
+}
+.addNoteToggled .actionsContainer{
+  display: none;
 }
 </style>

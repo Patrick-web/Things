@@ -58,7 +58,7 @@ created(){
         notes.forEach(note => {
         note.addEventListener('click',(e)=>{
             note.classList.add('expand')
-            document.body.classList.add('expanded')
+            document.body.classList.add('note-expanded')
         })
         });
     },0)
@@ -76,7 +76,7 @@ created(){
         height: 100%;
         background: yellow;
         border: none;
-        color: white;
+        color: rgb(31, 31, 31);
         padding: 10px;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         font-weight: 100;
@@ -85,12 +85,12 @@ created(){
     }
     .note{
         margin: 10px;
-        background: rgba(255, 255, 255, 0.089);
+        background: rgb(255, 255, 255);
         position: relative;
         height: 19.5vh;
         overflow: hidden;
-        /* top:100%; */
         transition:0.1s;
+        box-shadow: 2px 2px 5px rgb(168, 168, 168);
     }
     .expand{
         position: fixed;
@@ -99,7 +99,7 @@ created(){
         border-bottom-left-radius: 15px;
         border-bottom-right-radius: 15px;
         margin-left: 8px;
-        background: linear-gradient(150deg,rgb(4, 4, 53),rgb(1, 37, 61));
+        box-shadow: none;
         top:0;
         margin-top: 0;
         z-index: 2;
@@ -110,13 +110,14 @@ created(){
     .expand .txtArea{
         height: 100%;
         background: white;
+        color: black;
     }
     .expand .previewBox{
         height: 480px;
         background: white;
     }
     .bar{
-        --barBgColor: linear-gradient(90deg,orange,rgb(255, 0, 98));
+        --barBgColor: rgb(0, 153, 255);
         height: 20px;
         background: var(--barBgColor) ;
         transition: 0.3s all ease-in;
@@ -125,6 +126,7 @@ created(){
         align-content: center;
         position: relative;
         overflow: hidden;
+        font-weight: 300;
     }
     .expand .textareaCover{
         display: none;
@@ -159,10 +161,10 @@ created(){
         height: 100%;
         background: none;
         border: none;
-        color: white;
+        color: rgb(2, 2, 2);
         padding: 10px;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-weight: 100;
+        font-weight: 300;
         font-size: var(--font-size);
         line-height: 1.4rem;
         outline: none;

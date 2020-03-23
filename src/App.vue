@@ -1,21 +1,22 @@
 <template>
   <div class="main-container">
-    <navbar/>
-
-
     <div class="view-container">
-      <stickys class="stickyView"/>
+      <!-- <stickys class="stickyView"/> -->
+      <shoppingLists class="shoppingView"/>
     </div>
     <div class="cover"></div>
+    <navbar/>
   </div>
 </template>
 
 <script>
 import stickys from '@/views/stickys.vue'
+import shoppingLists from '@/views/shopping.vue'
 import navbar from '@/components/navbar.vue'
 export default {
   components:{
     stickys,
+    shoppingLists,
     navbar
   },
   methods:{
@@ -27,39 +28,14 @@ export default {
   },
   created() {
     
-    setTimeout(()=>{
-    const reminderBt = document.querySelector('#alert');
-    const stickyBt = document.querySelector("#sticky");
-    const indicator = document.querySelector('.indicatorBar');
-    const addBt = document.querySelector('#addBt');
+    // setTimeout(()=>{
+    // const addBtNote = document.querySelector('.add-note');
 
-
-    reminderBt.addEventListener('click',(e)=>{
-      indicator.style.left=  '-2%';
-      indicator.style.width=  '10vh';
-        indicator.style.transformOrigin=  'center';
-      indicator.style.transform=  'scaleX(1)';
-      setTimeout(()=>{
-        indicator.style.left=  '1%';
-      indicator.style.width=  '6.5vh';
-
-      },400)
-    })
-    stickyBt.addEventListener('click',(e)=>{
-      indicator.style.left=  '82.5%';
-      indicator.style.width=  '8vh';
-      setTimeout(()=>{
-      indicator.style.transform=  'scaleX(1)';
-      indicator.style.width=  '6vh';
-
-      },400)
-
-    })
-
-    addBt.addEventListener('click',(e)=>{
-      document.body.classList.toggle('addToggled')
-    })
-    },0)
+    // addBtNote.addEventListener('click',(e)=>{
+    //   document.body.classList.toggle('addNoteToggled');
+    //   // alert("addBt clicked")
+    // })
+    // },0)
   }
 
 }
@@ -74,35 +50,11 @@ export default {
   font-family: Arial, Helvetica, sans-serif;
 }
 body{
-  background: #010122;
+  background: rgb(218, 216, 216);
   position: relative;
   height: 100vh;
 }
-.actionsContainer{
-  position: fixed;
-  margin-left: 15px;
-  right: 15px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  top: 100vh;/*78vh*/
-  left: 0;
-  background:#d8d8d8;
-  text-align: center;
-  padding: 10px;
-  border-radius: 3px;
-  z-index: 3;
-  transition: 0.3s ease-in all;
-  height: 10vh;
 
-}
-.expanded .actionsContainer{
-  top:88vh;
-}
-.actionsContainer img{
-  width: 40px;
-}
 #deleteNote{
   position: absolute;
   left: 10px;
@@ -118,52 +70,12 @@ body{
   width: 8%;
 }
 
-#addBt{
-  border-radius: 80%;
-  background: rgb(8, 202, 144);
-  padding: 10px;
-  position: absolute;
-  top:-25px;
-  z-index: 1;
-  width: 50px;
-  height: 50px;
-}
-.addToggled #addBt{
-  background: rgb(255, 0, 179);;
 
-}
-#addBt::after{
-  content: '';
-  position: absolute;
-  top:-5px;
-  bottom:-5px;
-  right: -5px;
-  left: -5px;
-  border-radius: 100%;
-  background: transparent;
-  z-index: -1;
-  border: 5px solid #100f41;
-}
-.addToggled #addBt::after{
-    content: '';
-  position: absolute;
-  top:-5px;
-  bottom:-5px;
-  right: -5px;
-  left: -5px;
-  border-radius: 100%;
-  background: transparent;
-  z-index: -1;
-  border: 5px solid #000008;
-}
-#addBt img{
-  width: 30px;
-  height: 30px;
-
-  transition: 0.3s all ease-in-out;
-}
-.addToggled .addImg{
+.addNoteToggled .addImg{
   transform: rotate(225deg);
+}
+.addNoteToggled #nav{
+  display: none;
 }
 #alert,#sticky{
   position: absolute;
@@ -187,14 +99,17 @@ body{
   transform-origin: bottom;
   transition: 50ms;
 }
-.expanded .cover{
+.note-expanded .cover{
   transform: scaleY(1);
 
 }
-.addToggled .cover{
+.note-expanded #addBt{
+  display: none;
+}
+.addNoteToggled .cover{
   transform: scaleY(1);
 }
-.addToggled .addSticky{
-  top:60px;
+.addNoteToggled .addSticky{
+  top:10px;
 }
 </style>

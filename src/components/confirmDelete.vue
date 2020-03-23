@@ -44,28 +44,27 @@ export default {
     transition: 0.1s;
     text-align: center;
     width: 45vw;
-    background:#d8d8d8;
+    background:linear-gradient(150deg,#96004b,#920086);
     border-radius: 10px;
     height: 40vh;
 }
 .text{
-    color: rgb(51, 51, 51);
+    color: white;
     margin: 5px;
     font-size: 1.5rem;
     font-family: Arial, Helvetica, sans-serif;
 }
 .option-btns{
-    margin-top: 50px;
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 10px;
     position: absolute;
-    bottom: 5px;
-    left: 10px;
-    right: 10px;
+    bottom: 10px;
+    left: 65% ;
+    transform:translateX(-50%)
 }
 .btn{
-    width: 50px;
+    width: 30px;
 }
 </style>
