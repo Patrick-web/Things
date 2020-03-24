@@ -5,24 +5,32 @@
       </div>
    
    <div style="margin-top:55px" class="listsContainer">
-       <div class="addItemBox">
-        <div class="fgroup">
-            <label for="itemName">Item</label>
-            <input type="text" id="itemName">
-        </div>
-        <div class="fgroups">
-            <div class="fgroup">
-                <label for="">Price</label>
-                <input inputmode="number" type="text"  id="price">
-            </div>
-            <div class="fgroup">
-                <label for="">Amount</label>
-                <input inputmode="number" type="text"  id="amount">
-            </div>
-        </div>
-       </div>
+
 
       <div v-bind:key="list.id" v-for="list in shoppingLists" class="shopping-list">
+        <div class="addItemBox">
+            <div class="fgroup">
+                <label for="itemName">Item</label>
+                <input type="text" v-model="itemName" id="itemName">
+            </div>
+            <div class="fgroups">
+                <div class="fgroup">
+                    <label for="">Price</label>
+                    <input v-model="price" inputmode="numeric" type="text"  id="price">
+                </div>
+                <div class="fgroup">
+                    <label for="">Amount</label>
+                    <input v-model="howMany" inputmode="numeric" type="text"  id="amount">
+                </div>
+            </div>
+            <div id="saveItemBt" v-on:click="addNewItem(list.id)" ><p style="margin-top:-20px">Add</p> 
+                <img src="@/assets/yes.svg" style="margin-top:20px;width:27px;display:block;position:absolute" alt="">
+            </div>
+            <div id="updateItemBt" ><p style="margin-top:-20px">Save</p> 
+                <img src="@/assets/yes.svg" style="margin-top:20px;width:27px;display:block;position:absolute" alt="">
+            </div>
+       </div>
+
           <p id="listId" style="display:none">{{list.id}}</p>
           <p class="listTitle">{{list.name}}</p>
           <div class="btWrapper" style="display:flex;align-items:center;justify-content:center">
@@ -48,7 +56,7 @@
                     </div>
                 </div>
                 <div class="rightContainer">
-                    <div class="doneBt" v-on:click="toggleState(list.id,item.id)"></div>
+                    <div class="doneBt" v-on:click="toggleState(list.id,item.id,$event)"></div>
                     <p style="display:none" id="isAcquired">{{item.isAcquired}}</p>
                     <p style="display:none" class="acquired">Acquired</p>
                 </div>
@@ -58,11 +66,11 @@
               <div class="pillsContainer">
                   <div id="total" style="margin-right:30px" class="pill">
                     <div  class="pill-name" style="padding-left: 8px">Total</div>
-                    <div class="pill-value">{{list.planedExpenditure}}</div>
+                    <div class="pill-value">{{list.items.map(item=>item.price*item.howMany).reduce((total,totalCost)=>total+totalCost,0)}}</div>
                   </div>
                   <div id="total" style="margin-left:-10px"  class="pill">
                     <div class="pill-name">Remaining</div>
-                    <div class="pill-value">2000</div>
+                    <div class="pill-value">{{list.planedExpenditure - list.items.map(item=>item.price*item.howMany).reduce((total,totalCost)=>total+totalCost,0)}}</div>
                   </div>
               </div>
           </div>
@@ -74,9 +82,46 @@
 
 
 <script>
+import { uuid } from 'uuidv4'
+
 export default {
-  methods:{
-      toggleState(listID,itemID){
+data(){
+    return{
+        itemName:'',
+        price:'',
+        howMany:'',
+        shoppingLists:[
+          {
+            id:26226652,
+            name:"Chandler's Birthday Cake",
+            date:"22-08-2020",
+            planedExpenditure:1500,
+            remaining:0,
+            items:[
+                {
+                  id:1515156,
+                  itemName:"Backing Powder",
+                  price:50,
+                  howMany:2,
+                  isAcquired:false
+                },
+    
+                ]
+          }   
+      ]
+    }},
+    methods:{
+      toggleState(listID,itemID,event){
+          const itemSelected = event.target.parentElement.parentElement;
+          const acquiredState = itemSelected.querySelector('#isAcquired').textContent;
+          if(acquiredState=="true"){
+                    itemSelected.classList.remove('itemAcquired');
+                    itemSelected.querySelector('#isAcquired').textContent ='false'
+          }else{
+                    itemSelected.classList.add('itemAcquired')
+                    itemSelected.querySelector('#isAcquired').textContent ='true'
+          }
+
           let targetList;
           this.shoppingLists.forEach((list)=>{
               if(list.id == listID){
@@ -87,7 +132,32 @@ export default {
               if(item.id == itemID){
                   item.isAcquired = !item.isAcquired;
               }
+          }) 
+      },
+      addNewItem(listID){
+        let targetList;
+          this.shoppingLists.forEach((list)=>{
+              if(list.id == listID){
+                  targetList = list;
+              }
           })
+          const newItem = {
+              id:uuid(),
+              itemName:this.itemName,
+              howMany:parseInt(this.howMany),
+              price:parseInt(this.price),
+              isAcquired:false
+          }
+          targetList.items.unshift(newItem)
+          document.querySelector('#itemName').value = '';
+          this.itemName = ''
+          document.querySelector('#amount').value = ''
+          this.howMany = ''
+          document.querySelector('#price').value = ''
+          this.price = ''
+          document.body.classList.remove('addingItem')
+          console.log(targetList.items);
+
       }
   },
   created(){
@@ -124,65 +194,7 @@ export default {
           
       },0)
   },
-  data(){
-  return{
-    shoppingLists:[
-      {
-          id:26226652,
-          name:"Chandler's Birthday Cake",
-          date:"22-08-2020",
-          planedExpenditure:1500,
-          remaining:()=>{
-              const totalExp=0;
-              items.forEach(item => {
-                  if(item.isAcquired){
-                      totalExp+=item.price
-                  }
-              });
-                      return 100;
-          },
-          items:[
-              {
-                  id:1515156,
-                  itemName:"Backing Powder",
-                  price:50,
-                  howMany:2,
-                  isAcquired:false
-              },
-              {
-                  id:1515356,
-                  itemName:"Wheat Flour",
-                  price:200,
-                  howMany:1,
-                  isAcquired:false
-              },
-              {
-                  id:15356,
-                  itemName:"Cooking Oil",
-                  price:500,
-                  howMany:1,
-                  isAcquired:false
-              },
-              {
-                  id:15394156,
-                  itemName:"Sugar",
-                  price:1000,
-                  howMany:10,
-                  isAcquired:true
-              },
-              {
-                  id:1539156,
-                  itemName:"Candles",
-                  price:101,
-                  howMany:30,
-                  isAcquired:false
-              },
 
-          ]
-      }   
-    ]
-  }
-}
 }
 </script>
 
@@ -319,7 +331,7 @@ export default {
         transform: scale(0);
         transform-origin: right;
         transition: 0.2s ease-in-out;
-        border-top-right-radius: 20px;
+        border-radius: 20px;  
         z-index: 4;
         position: fixed;
         top:26%;
@@ -339,6 +351,8 @@ export default {
         border-bottom: 1px solid white;
         background: none;
         color: white;
+        font-size: 1.2em;
+        font-weight: 300;
     }
     .addItemBox label{
         font-size: 1.3rem;
@@ -347,5 +361,28 @@ export default {
         margin-top: 10px;
         display: grid;
         grid-template-columns: 1fr 1fr;
+    }
+    #saveItemBt,#updateItemBt{
+        position: absolute;
+        right:0px;
+        top:0px;
+        height: 100%;
+        background: linear-gradient(150deg,magenta,orange);
+        color: white;
+        font-size: 1.4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        width: 50px;
+    }
+    #updateItemBt{
+        z-index: -1;
+    }
+    .updating-item #updateItemBt{
+        z-index: 2;
+
     }
 </style>
