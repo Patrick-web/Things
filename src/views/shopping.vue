@@ -34,7 +34,7 @@
           <p id="listId" style="display:none">{{list.id}}</p>
           <p class="listTitle">{{list.name}}</p>
           <div class="btWrapper" style="display:flex;align-items:center;justify-content:center">
-            <img class="addShoppingItem" src="@/assets/plus.svg" alt="">
+            <img class="addShoppingItem" v-on:click="showAddBox($event)" src="@/assets/plus.svg" alt="">
           </div>
           <div class="itemsContainer">
 
@@ -75,7 +75,7 @@
                   </div>
                   <div id="total" style="margin-left:-10px"  class="pill">
                     <div class="pill-name">Remaining</div>
-                    <div class="pill-value">{{list.planedExpenditure - list.items.map(item=>item.price*item.howMany).reduce((total,totalCost)=>total+totalCost,0)}}</div>
+                    <div class="pill-value">{{list.budget - list.items.map(item=>item.price*item.howMany).reduce((total,totalCost)=>total+totalCost,0)}}</div>
                   </div>
               </div>
           </div>
@@ -107,7 +107,7 @@ data(){
             id:26226652,
             name:"Chandler's Birthday Cake",
             date:"22-08-2020",
-            planedExpenditure:1500,
+            budget:1500,
             remaining:0,
             items:[
                 {
@@ -119,10 +119,31 @@ data(){
                 },
     
                 ]
+          }, 
+          {
+            test:"",
+            id:266652,
+            name:"Back to school",
+            date:"22-08-2020",
+            budget:3000,
+            remaining:0,
+            items:[
+                {
+                  id:1556156,
+                  itemName:"Bic pen",
+                  price:25,
+                  howMany:2,
+                  isAcquired:false
+                },
+    
+                ]
           }   
       ]
     }},
     methods:{
+        showAddBox(e){
+            console.log(e.target);
+        },
         showOptions(e){
             const itemSelected = event.currentTarget.parentElement;
             console.log(itemSelected);
@@ -289,6 +310,9 @@ data(){
         overflow: hidden;
         font-weight: 400;
     }
+    .itemsContainer{
+        /* margin-bottom: 25px; */
+    }
     .item{
         display: grid;
         grid-template-columns: 4fr 1fr;
@@ -349,7 +373,7 @@ data(){
     .bottomInfo{
         border-top: purple 1px solid;
         background: rgba(128, 0, 128, 0.315);
-        padding: 5px;
+        padding: 10px;
     }
     #total{
         background: purple;
