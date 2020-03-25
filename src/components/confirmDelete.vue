@@ -3,7 +3,7 @@
       <p class="text">Continue To Delete ?</p>
       <div class="option-btns">
           <img src="@/assets/cancel.svg" v-on:click="hideConfirmBox" alt="" class="btn">
-          <img src="@/assets/yes.svg" v-on:click="deleteSticky" alt="" class="btn">
+          <img src="@/assets/yes.svg" v-on:click="deleter" alt="" class="btn">
       </div>
   </div>
 </template>
@@ -11,19 +11,33 @@
 <script>
 export default {
     methods:{
-        deleteSticky(){
-            const targetSticky = document.querySelector('.expand');
-            const id = targetSticky.querySelector('#noteId').textContent;
-            document.body.classList.remove('expanded')
-            document.querySelector('.expand').classList.add('deleteTarget');
-            document.querySelector('.expand').classList.remove('expand');
+        deleter(){
             document.querySelector('.confirm').style.right = "-200px"
-            setTimeout(()=>{
-                this.$emit('deleteSticky',id);
-                const updateBt = document.querySelector('#updateNote');
-                updateBt.style.transform = "scale(0)"
+            const bodyClasses = Array.from(document.body.classList)
 
-            },1100)
+            bodyClasses.forEach((cls)=>{
+                if(cls=="view=Notes"){
+                    const targetSticky = document.querySelector('.expand');
+                    const id = targetSticky.querySelector('#noteId').textContent;
+                    document.body.classList.remove('note-expanded')
+                    document.querySelector('.expand').classList.add('deleteTarget');
+                    document.querySelector('.expand').classList.remove('expand');
+
+
+                    setTimeout(()=>{
+                        this.$emit('deleteSticky',id);
+                        const updateBt = document.querySelector('#updateNote');
+                        updateBt.style.transform = "scale(0)"
+        
+                    },1100)//delay is to allow fade out animation
+                }else if(cls == "view=Shopping"){
+                    this.$emit('deleteShoppingItem');
+                    // alert("deleting shopping item")
+                }else if(cls = "view=Tasks"){
+                    alert("deleting a task")
+                }
+            })
+
 
         },
         hideConfirmBox(){
@@ -37,7 +51,7 @@ export default {
 <style>
 .confirm{
     position: fixed;
-    z-index: 3;
+    z-index: 4;
     top:50%;
     right: -200px;
     transform: translateY(-50%);

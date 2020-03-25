@@ -3,7 +3,7 @@
       <div class="titleArea view">
           <p>Shopping List</p>
       </div>
-   
+    <confirmDelete v-on:deleteShoppingItem="deleteItem"/>
    <div style="margin-top:55px" class="listsContainer">
 
 
@@ -26,7 +26,7 @@
             <div id="saveItemBt" v-on:click="addNewItem(list.id)" ><p style="margin-top:-20px">Add</p> 
                 <img src="@/assets/yes.svg" style="margin-top:20px;width:27px;display:block;position:absolute" alt="">
             </div>
-            <div id="updateItemBt" ><p style="margin-top:-20px">Save</p> 
+            <div id="updateItemBt" v-on:click="editItem()" ><p style="margin-top:-20px">Save</p> 
                 <img src="@/assets/yes.svg" style="margin-top:20px;width:27px;display:block;position:absolute" alt="">
             </div>
        </div>
@@ -37,8 +37,13 @@
             <img class="addShoppingItem" src="@/assets/plus.svg" alt="">
           </div>
           <div class="itemsContainer">
-              <div v-bind:key="item.id" v-for="item in list.items" class="item">
-                <div class="leftContainer">
+
+              <div  v-bind:key="item.id" v-for="item in list.items" class="item">
+              <div class="options">
+                  <img v-on:click="showEditBox(item.id,list.id)" src="@/assets/editIcon.svg" alt="">
+                  <img v-on:click="showConfirmBox(item.id,list.id)" src="@/assets/trashIcon.svg" alt="">
+              </div>
+                <div v-on:click="showOptions($event)"  class="leftContainer">
 
                     <p id="itemId" style="display:none">{{item.id}}</p>
                     <p id="listId" style="display:none">{{list.id}}</p>
@@ -83,15 +88,22 @@
 
 <script>
 import { uuid } from 'uuidv4'
+import confirmDelete from '@/components/confirmDelete.vue'
 
 export default {
+components:{
+    confirmDelete
+},
 data(){
     return{
         itemName:'',
         price:'',
         howMany:'',
+        indexOfTargetItem:0,
+        indexOfTargetList:0,
         shoppingLists:[
           {
+            test:"",
             id:26226652,
             name:"Chandler's Birthday Cake",
             date:"22-08-2020",
@@ -111,6 +123,73 @@ data(){
       ]
     }},
     methods:{
+        showOptions(e){
+            const itemSelected = event.currentTarget.parentElement;
+            console.log(itemSelected);
+            const alreadyOpenItem = document.querySelector('.showOptions');
+            itemSelected.classList.toggle('showOptions')
+            
+            if(alreadyOpenItem!=undefined){
+                alreadyOpenItem.classList.remove('showOptions')
+            }
+        },
+        showConfirmBox(itemID,listID){
+          document.querySelector('.confirm').style.right="10px";
+
+            //Get index of target list
+            //get index of target item
+            //splice out the item at that index
+            const targetListID = this.shoppingLists.map(list=>list.id)
+            .indexOf(listID)
+            this.indexOfTargetList = targetListID
+            
+            const targetItemID  = this.shoppingLists[targetListID].items.map(item=>item.id)
+            .indexOf(itemID)
+            
+            this.indexOfTargetItem = targetItemID
+        },
+        deleteItem(){
+            this.shoppingLists[this.indexOfTargetList].items.splice(this.indexOfTargetItem,1)
+        },
+        showEditBox(itemID,listID){
+            document.body.classList.toggle('addingItem');
+            document.querySelector('#updateItemBt').style.zIndex = "3";
+            
+            const targetListIndex = this.shoppingLists.map(list=>list.id)
+            .indexOf(listID)
+            const targetItemIndex  = this.shoppingLists[targetListIndex].items.map(item=>item.id)
+            .indexOf(itemID)
+
+            this.indexOfTargetList = targetListIndex;
+            this.indexOfTargetItem = targetItemIndex;
+
+            const itemName = this.shoppingLists[targetListIndex].items[targetItemIndex].itemName
+            const price = this.shoppingLists[targetListIndex].items[targetItemIndex].price
+            const howMany = this.shoppingLists[targetListIndex].items[targetItemIndex].howMany
+
+            this.itemName = itemName
+            this.price = price
+            this.howMany = howMany
+            document.querySelector('#itemName').value = itemName;
+            document.querySelector('#amount').value = howMany
+            document.querySelector('#price').value = price
+
+        },
+        editItem(){
+            this.shoppingLists[this.indexOfTargetList].items[this.indexOfTargetItem].itemName = this.itemName;
+            this.shoppingLists[this.indexOfTargetList].items[this.indexOfTargetItem].price = this.price;
+            this.shoppingLists[this.indexOfTargetList].items[this.indexOfTargetItem].howMany = this.howMany;
+            this.clearData()
+        },
+        clearData(){
+          document.querySelector('#itemName').value = '';
+          this.itemName = ''
+          document.querySelector('#amount').value = ''
+          this.howMany = ''
+          document.querySelector('#price').value = ''
+          this.price = ''
+          document.body.classList.remove('addingItem')
+        },
       toggleState(listID,itemID,event){
           const itemSelected = event.target.parentElement.parentElement;
           const acquiredState = itemSelected.querySelector('#isAcquired').textContent;
@@ -149,21 +228,14 @@ data(){
               isAcquired:false
           }
           targetList.items.unshift(newItem)
-          document.querySelector('#itemName').value = '';
-          this.itemName = ''
-          document.querySelector('#amount').value = ''
-          this.howMany = ''
-          document.querySelector('#price').value = ''
-          this.price = ''
-          document.body.classList.remove('addingItem')
-          console.log(targetList.items);
-
+          this.clearData()  
       }
   },
   created(){
       setTimeout(()=>{
           const addItemBt = document.querySelector('.addShoppingItem');
           addItemBt.addEventListener('click',()=>{
+              document.querySelector('#updateItemBt').style.zIndex = "-1";
               document.body.classList.toggle('addingItem')
           })
 
@@ -223,6 +295,9 @@ data(){
         padding: 5px;
         background: lavender;
         margin: 5px;
+        position: relative;
+        margin-bottom: 5px;
+        transition: 0.1s ease-in-out;
     }
     .item-name{
         font-size: 1.3rem;
@@ -384,5 +459,37 @@ data(){
     .updating-item #updateItemBt{
         z-index: 2;
 
+    }
+    .options{
+        position: absolute;
+        z-index: 2;
+        right: 0%;
+        /* transform: translateX(-50%); */
+        bottom:-44px;
+        padding: 2px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        background: lavender;
+        /* width: 100%; */
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: 0.1s ease-in;
+    }
+    .options img{
+        width: 40px;
+        margin-right: 5px;
+        margin-left: 5px;
+        transform: scale(0);
+        transition: 0.25s ease-in-out;
+    }
+    .showOptions .options{
+        transform: scaleY(1);
+        transform-origin: top;
+    }
+    .showOptions .options img{
+        transform: scale(1);
+    }
+    .showOptions{
+        margin-bottom: 48px;
     }
 </style>

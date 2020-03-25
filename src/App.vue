@@ -28,14 +28,14 @@ export default {
   },
   created() {
     
-    // setTimeout(()=>{
-    // const addBtNote = document.querySelector('.add-note');
+    setTimeout(()=>{
+    const addBtNote = document.querySelector('.add-note');
 
-    // addBtNote.addEventListener('click',(e)=>{
-    //   document.body.classList.toggle('addNoteToggled');
-    //   // alert("addBt clicked")
-    // })
-    // },0)
+    addBtNote.addEventListener('click',(e)=>{
+      document.body.classList.toggle('addNoteToggled');
+      // alert("addBt clicked")
+    })
+    },0)
   }
 
 }

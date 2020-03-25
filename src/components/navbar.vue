@@ -16,12 +16,18 @@ export default {
       nav.classList.remove('current-notes');
       nav.classList.remove('current-tasks');
       nav.classList.add('current-shopping');
+      document.body.classList.add('view=Shopping');
+      document.body.classList.remove('view=Notes');
+      document.body.classList.remove('view=Tasks');
     },
     goToNotes(){
       const nav = document.querySelector("#nav");
       nav.classList.add('current-notes');
       nav.classList.remove('current-tasks');
       nav.classList.remove('current-shopping');
+      document.body.classList.add('view=Notes');
+      document.body.classList.remove('view=Shopping');
+      document.body.classList.remove('view=Tasks');
 
     },
     goToTasks(){
@@ -29,8 +35,11 @@ export default {
       nav.classList.remove('current-notes');
       nav.classList.add('current-tasks');
       nav.classList.remove('current-shopping');
+      document.body.classList.add('view=Tasks');
+      document.body.classList.remove('view=Notes');
+      document.body.classList.remove('view=Shopping');
+    },
 
-    }
   }
 }
 </script>

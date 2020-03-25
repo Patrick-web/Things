@@ -4,7 +4,7 @@
       <p class="nt">Sticky</p>
         <textarea v-model="note" name="" id="noteEntry" cols="30" rows="10"></textarea>
     
-      <div class="options">
+      <div class="stickyOptions">
           <div class="save" v-on:click="saveNote">
               <p>Save</p>
               <img src="@/assets/save-white.svg" alt="">
@@ -104,7 +104,7 @@ export default {
     border-radius: 20px;
     text-align: center;
 }
-.options{
+.stickyOptions{
     position: relative;
     margin-top: 10px;
     text-align: center;
