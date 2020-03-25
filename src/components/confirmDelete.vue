@@ -51,7 +51,7 @@ export default {
 <style>
 .confirm{
     position: fixed;
-    z-index: 4;
+    z-index: 6;
     top:50%;
     right: -200px;
     transform: translateY(-50%);

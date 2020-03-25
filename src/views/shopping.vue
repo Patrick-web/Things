@@ -7,7 +7,6 @@
    <div style="margin-top:55px" class="listsContainer">
 
 
-      <div v-bind:key="list.id" v-for="list in shoppingLists" class="shopping-list">
         <div class="addItemBox">
             <div class="fgroup">
                 <label for="itemName">Item</label>
@@ -23,18 +22,19 @@
                     <input v-model="howMany" inputmode="numeric" type="text"  id="amount">
                 </div>
             </div>
-            <div id="saveItemBt" v-on:click="addNewItem(list.id)" ><p style="margin-top:-20px">Add</p> 
+            <div id="saveItemBt" v-on:click="addNewItem()" ><p style="margin-top:-20px">Add</p> 
                 <img src="@/assets/yes.svg" style="margin-top:20px;width:27px;display:block;position:absolute" alt="">
             </div>
             <div id="updateItemBt" v-on:click="editItem()" ><p style="margin-top:-20px">Save</p> 
                 <img src="@/assets/yes.svg" style="margin-top:20px;width:27px;display:block;position:absolute" alt="">
             </div>
        </div>
+      <div v-bind:key="list.id" v-for="list in shoppingLists" class="shopping-list">
 
           <p id="listId" style="display:none">{{list.id}}</p>
           <p class="listTitle">{{list.name}}</p>
           <div class="btWrapper" style="display:flex;align-items:center;justify-content:center">
-            <img class="addShoppingItem" v-on:click="showAddBox($event)" src="@/assets/plus.svg" alt="">
+            <img class="addShoppingItem" v-on:click="showAddBox(list.id,$event)" src="@/assets/plus.svg" alt="">
           </div>
           <div class="itemsContainer">
 
@@ -101,6 +101,7 @@ data(){
         howMany:'',
         indexOfTargetItem:0,
         indexOfTargetList:0,
+        targetList:'',
         shoppingLists:[
           {
             test:"",
@@ -141,8 +142,11 @@ data(){
       ]
     }},
     methods:{
-        showAddBox(e){
-            console.log(e.target);
+        showAddBox(listID,e){
+            this.targetList = listID
+            document.querySelector('#updateItemBt').style.zIndex = "-1";
+            document.body.classList.toggle('addingItem')
+            e.target.classList.toggle('closeAddBox');
         },
         showOptions(e){
             const itemSelected = event.currentTarget.parentElement;
@@ -234,10 +238,10 @@ data(){
               }
           }) 
       },
-      addNewItem(listID){
+      addNewItem(){
         let targetList;
           this.shoppingLists.forEach((list)=>{
-              if(list.id == listID){
+              if(list.id == this.targetList){
                   targetList = list;
               }
           })
@@ -254,11 +258,11 @@ data(){
   },
   created(){
       setTimeout(()=>{
-          const addItemBt = document.querySelector('.addShoppingItem');
-          addItemBt.addEventListener('click',()=>{
-              document.querySelector('#updateItemBt').style.zIndex = "-1";
-              document.body.classList.toggle('addingItem')
-          })
+        //   const addItemBt = document.querySelector('.addShoppingItem');
+        //   addItemBt.addEventListener('click',()=>{
+        //       document.querySelector('#updateItemBt').style.zIndex = "-1";
+        //       document.body.classList.toggle('addingItem')
+        //   })
 
           const items = document.querySelectorAll('.item');
           items.forEach((item)=>{
@@ -297,6 +301,8 @@ data(){
         width: 95%;
         margin: auto;
         position: relative;
+        margin-bottom: 10px;
+        margin-top: 10px;
     }
     .listContainer{
         position: relative;
@@ -415,12 +421,9 @@ data(){
         box-shadow: 0px 0px 15px rgb(50, 60, 71);
         /* transform-origin: top; */
     }
-    .addingItem .addShoppingItem{
+    .closeAddBox{
         transform: rotate(135deg);
-    
-    }
-    .addingItem .addShoppingItem{
-        background: rgb(255, 0, 106);
+        background:rgb(255, 0, 106) ;
     }
     .addingItem .addItemBox{
         transform: scale(1);
@@ -431,7 +434,7 @@ data(){
         transform-origin: right;
         transition: 0.2s ease-in-out;
         border-radius: 20px;  
-        z-index: 4;
+        z-index: 6;
         position: fixed;
         top:26%;
         width: 85%;
