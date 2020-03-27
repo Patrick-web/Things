@@ -6,46 +6,33 @@
       </div>
       <div class="content">
           <div class="textareaCover"></div>
-          <p class="previewBox txtArea">{{note.note}}</p>
+          <p id="previewBox" class="txtArea">{{note.note}}</p>
           <p id="noteId">{{note.id}}</p>
-          <textarea class="txtArea"  name="" id="" cols="30" rows="20">
-              
+          <textarea v-model="note.note" id="actualtxtarea" class="txtArea"  name="" cols="30" rows="20">
           </textarea>
-
+          <actionsBar class="actions" v-on:updateNote="$emit(updateNote)"/>
       </div>
   </div>
 </template>
 
 <script>
+import actionsBar from '@/components/actionsBar.vue'
+
 export default {
 name:'note',
+components:{
+    actionsBar
+},
 props:["note"],
 created(){
     setTimeout(()=>{
         const notes = document.querySelectorAll('.note');
         const textareas = document.querySelectorAll('.txtArea');
         notes.forEach((note)=>{
-            note.querySelector('textarea').addEventListener('click',()=>{
-                const preview = note.querySelector('.previewBox');
-                const textarea = note.querySelector('textarea');
-                textarea.value = preview.textContent;
-                console.log(textarea.value);
-                preview.style.display = "none";
-
-                document.querySelector('.confirm').style.right = "-200px"
-
-
-            })
-            note.querySelector('textarea').addEventListener('keyup',()=>{
-                if(note.querySelector('textarea')===document.activeElement){
-                    alert("textarea active")
-                }
-                const updateBt = document.querySelector('#updateNote');
-                updateBt.style.transform = "scale(1)"
-            })
-            note.querySelector('.txtArea').addEventListener('click',()=>{
-                const preview = note.querySelector('.previewBox');
-                const textarea = note.querySelector('textarea');
+            note.querySelector('#previewBox').addEventListener('click',()=>{
+                const preview = note.querySelector('#previewBox');
+                const textarea = note.querySelector('#actualtxtarea');
+                textarea.style.display="block"
                 textarea.value = preview.textContent;
                 textarea.focus()
                 console.log(textarea.value);
@@ -70,11 +57,10 @@ created(){
     #noteId{
         display: none;
     }
-    .previewBox{
+    #previewBox{
         --font-size: 1.2rem;
         width: 100%;
-        height: 100%;
-        background: yellow;
+        position: absolute;
         border: none;
         color: rgb(31, 31, 31);
         padding: 10px;
@@ -82,10 +68,11 @@ created(){
         font-weight: 100;
         font-size: var(--font-size);
         line-height: 1.4rem;
+        overflow-y: scroll;
     }
     .note{
+        background:#f5f8fa;
         margin: 10px;
-        background: rgb(255, 255, 255);
         position: relative;
         height: 19.5vh;
         overflow: hidden;
@@ -102,19 +89,15 @@ created(){
         box-shadow: none;
         top:0;
         margin-top: 0;
-        z-index: 2;
+        z-index: 8;
+        padding-bottom: 50px;
     }
     .expand .bar{
         height: 35px;
     }
-    .expand .txtArea{
-        height: 100%;
-        background: white;
-        color: black;
-    }
-    .expand .previewBox{
-        height: 480px;
-        background: white;
+    .expand #previewBox{
+        /* height: 480px; */
+        /* background: white; */
     }
     .bar{
         --barBgColor: rgb(0, 153, 255);
@@ -132,6 +115,7 @@ created(){
         display: none;
     }
     .textareaCover{
+        z-index: 4;
         position: absolute;
         height: 100%;
         width: 100%;
@@ -158,8 +142,7 @@ created(){
     .note .txtArea{
         --font-size: 1.2rem;
         width: 100%;
-        height: 100%;
-        background: none;
+        height: 82%;
         border: none;
         color: rgb(2, 2, 2);
         padding: 10px;
@@ -168,5 +151,15 @@ created(){
         font-size: var(--font-size);
         line-height: 1.4rem;
         outline: none;
+        
+    }
+    #actualtxtarea{
+        position: absolute;
+        display: none;
+    }
+    .actions{
+        position: absolute;
+        width: 100%;
+        bottom: 0px;
     }
 </style>

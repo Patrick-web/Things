@@ -1,16 +1,15 @@
 <template>
   <div class="stickyContainer">
-      <addSticky class="addSticky" v-on:addSticky="addSticky" style="position:fixed;z-index:3"/>
+      <addSticky class="addSticky" v-on:addSticky="addSticky" style="position:fixed;"/>
       <div class="titleArea">
           <p>Sticky Notes</p>
           <img class="more" src="@/assets/more.svg" alt="">
       </div>
       <div class="notesContainer">
           <div class="sticky" v-bind:key="sticky.id" v-for="sticky in notes">
-              <note v-bind:note="sticky"/>
+              <note v-bind:note="sticky" v-on:updateNote="updateNote"/>
           </div>
       </div>
-      <actionsBar v-on:updateNote="updateNote"/>
       <confirmDelete v-on:deleteSticky="deleteSticky"/>
         <addBt/>
   </div>
@@ -18,7 +17,6 @@
 
 <script>
 import note from '@/components/note.vue'
-import actionsBar from '@/components/actionsBar.vue'
 import addSticky from '@/components/addSticky.vue'
 import addBt from '@/components/addBt.vue'
 import confirmDelete from '@/components/confirmDelete.vue'
@@ -78,7 +76,6 @@ export default {
     components:{
         note,
         addSticky,
-        actionsBar,
         confirmDelete,
         addBt
     },
@@ -123,7 +120,8 @@ export default {
     }
     .addSticky{
         top:-800px;      
-        transition: 0.2s  all;
+        transition: 0.3s ease all;
+        z-index: 7;
     }
     .deleteTarget{
         animation: slideright;

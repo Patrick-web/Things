@@ -19,6 +19,7 @@ export default {
       document.body.classList.add('view=Shopping');
       document.body.classList.remove('view=Notes');
       document.body.classList.remove('view=Tasks');
+      document.body.classList.remove('addingSomething');
     },
     goToNotes(){
       const nav = document.querySelector("#nav");
@@ -28,6 +29,7 @@ export default {
       document.body.classList.add('view=Notes');
       document.body.classList.remove('view=Shopping');
       document.body.classList.remove('view=Tasks');
+      document.body.classList.remove('addingSomething');
 
     },
     goToTasks(){
@@ -38,6 +40,7 @@ export default {
       document.body.classList.add('view=Tasks');
       document.body.classList.remove('view=Notes');
       document.body.classList.remove('view=Shopping');
+      document.body.classList.remove('addingSomething');
     },
 
   }

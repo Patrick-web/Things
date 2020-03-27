@@ -33,7 +33,7 @@ export default {
                 }else if(cls == "view=Shopping"){
                     this.$emit('deleteShoppingItem');
                     // alert("deleting shopping item")
-                }else if(cls = "view=Tasks"){
+                }else if(cls == "view=Tasks"){
                     alert("deleting a task")
                 }
             })
@@ -51,7 +51,7 @@ export default {
 <style>
 .confirm{
     position: fixed;
-    z-index: 6;
+    z-index: 8;
     top:50%;
     right: -200px;
     transform: translateY(-50%);

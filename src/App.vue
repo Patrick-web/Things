@@ -32,7 +32,7 @@ export default {
     const addBtNote = document.querySelector('.add-note');
 
     addBtNote.addEventListener('click',(e)=>{
-      document.body.classList.toggle('addNoteToggled');
+      document.body.classList.toggle('addingSomething');
       // alert("addBt clicked")
     })
     },0)
@@ -55,26 +55,13 @@ body{
   height: 100vh;
 }
 
-#deleteNote{
-  position: absolute;
-  left: 10px;
-  width: 10%;
-}
-#saveNote{
-  width: 13%;
-
-}
-#colapse{
-  position: absolute;
-  right: 10px;
-  width: 8%;
-}
 
 
-.addNoteToggled .addImg{
+
+.addingSomething .addImg{
   transform: rotate(225deg);
 }
-.addNoteToggled #nav{
+.addingSomething #nav{
   display: none;
 }
 #alert,#sticky{
@@ -98,6 +85,8 @@ body{
   transform: scaleY(0);
   transform-origin: bottom;
   transition: 50ms;
+  z-index: 6;
+
 }
 .note-expanded .cover{
   transform: scaleY(1);
@@ -106,10 +95,10 @@ body{
 .note-expanded #addBt{
   display: none;
 }
-.addNoteToggled .cover{
+.addingSomething .cover{
   transform: scaleY(1);
 }
-.addNoteToggled .addSticky{
+.addingSomething .addSticky{
   top:10px;
 }
 </style>

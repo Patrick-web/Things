@@ -1,11 +1,17 @@
 <template>
-  <div class="saveStickyContainer">
-      <p class="containerTitle">Add Sticky Note</p>
-      <p class="nt">Sticky</p>
-        <textarea v-model="note" name="" id="noteEntry" cols="30" rows="10"></textarea>
+  <div class="mainCont">
+      <p class="containerTitle">Shopping List</p>
+      <div class="fgroup">
+        <label class="nt">Name</label>
+        <input v-model="listName" name="budget" id="shoppingListName">
+      </div>
+      <div class="fgroup">
+        <label class="nt">Budget</label>
+        <input v-model="budget" inputmode="numeric" name="budget" id="budget">
+      </div>
     
       <div class="stickyOptions">
-          <div class="save" v-on:click="saveNote">
+          <div class="save" v-on:click="emitList">
               <p>Save</p>
               <img src="@/assets/save-white.svg" alt="">
           </div>
@@ -19,11 +25,12 @@ export default {
     name:"addSticky",
     data(){
         return{
-            note:'',
+            listName:'',
+            budget:''
         }
     },
     methods:{
-        saveNote(){
+        emitList(){
             console.log(uuid());
             const today = new Date();
             const date = `${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}`
@@ -31,26 +38,31 @@ export default {
             const hour = (today.getHours())>12 ? today.getHours() - 12 :today.getHours();
             const minutes = (today.getMinutes())<10 ? `0${today.getMinutes()}` : today.getMinutes(); 
             const time = `${hour}:${minutes} ${timeOfDay}`
-            const newNote = {
-                note:this.note,
+            const newList = {
+                id:uuid(),
+                name:this.listName,
                 date:date,
-                time:time,
-                id:uuid()
+                budget:parseInt(this.budget),
+                items:[],
+
             }
             document.body.classList.toggle('addingSomething')
-            document.querySelector('#noteEntry').value = '';
-            if(this.note != ''){
-                this.$emit('addSticky',newNote);
+            document.querySelector('#shoppingListName').value = '';
+            document.querySelector('#budget').value = '';
+            if(this.listName != '' && this.budget != ''){
+                this.$emit('addNewList',newList);
             }
+            this.budget = '';
+            this.listName = '';
         }
     }
 }
 </script>
 
 <style>
-.saveStickyContainer{
+.mainCont{
     background:linear-gradient(150deg,#ffffff,rgb(255, 255, 255));
-    height: 360px;
+    height: 280px;
     width: 94vw;
     margin: auto;
     margin-left: 10px;
@@ -58,12 +70,18 @@ export default {
     border-radius: 2px;
     text-align: center;
     z-index: 7;
+    position: fixed;
+    top:-500px;
+    transition: 0.3s ease;
+}
+.addingSomething .mainCont{
+    top:10px;
 
 }
 .containerTitle{
     background: rgb(146, 0, 243);
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.4em;
     color: white;
     padding: 8px;
     border-radius: 0px;
@@ -118,5 +136,34 @@ export default {
     width: 25px;
     margin-left: 10px;
 }
-
+.fgroup {
+    width: 100%;
+    padding: 10px;
+}
+.fgroup label{
+    display: block;
+    margin-left: 0px;
+    font-weight: 300;
+}
+.fgroup input{
+    outline: none;
+    font-weight: 300;
+    width: 100%;
+    display: block;
+    background: white;
+    border: none;
+    font-size: 1.3rem;
+    border-bottom: 1px solid rgb(32, 32, 32);
+}
+.overlay{
+    z-index: 6;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background: rgba(48, 1, 56, 0.842);
+}
 </style>

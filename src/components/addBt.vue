@@ -19,7 +19,7 @@ export default {
   top:79%;
   left:50%;
   transform: translateX(-50%);
-  z-index: 4;
+  z-index: 8;
   width: 50px;
   height: 50px;
   transition: 0.2s ease-in-out all;
@@ -29,7 +29,7 @@ export default {
   align-items: center;
   box-shadow: 0px 0px 20px rgba(68, 68, 68, 0.753);
 }
-.addNoteToggled #addBt{
+.addingSomething #addBt{
   background: rgb(255, 0, 157);;
   top:4.8%;
   left:88%;

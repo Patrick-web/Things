@@ -1,5 +1,9 @@
 <template>
   <div class="shoppingContainer ">
+      <addShoppingList v-on:addNewList="saveNewList"/>
+
+      <!-- <div class="overlay"></div> -->
+
       <div class="titleArea view">
           <p>Shopping List</p>
       </div>
@@ -29,7 +33,7 @@
                 <img src="@/assets/yes.svg" style="margin-top:20px;width:27px;display:block;position:absolute" alt="">
             </div>
        </div>
-      <div v-bind:key="list.id" v-for="list in shoppingLists" class="shopping-list">
+      <div v-bind:key="list.id" v-for="list in shoppingLists" class="shopping-list expandedList">
 
           <p id="listId" style="display:none">{{list.id}}</p>
           <p class="listTitle">{{list.name}}</p>
@@ -81,6 +85,7 @@
           </div>
       </div>
    </div>
+   <addBt/>
   </div>
 </template>
 
@@ -89,10 +94,14 @@
 <script>
 import { uuid } from 'uuidv4'
 import confirmDelete from '@/components/confirmDelete.vue'
+import addShoppingList from '@/components/addShoppingList.vue'
+import addBt from '@/components/addBt.vue'
 
 export default {
 components:{
-    confirmDelete
+    confirmDelete,
+    addShoppingList,
+    addBt
 },
 data(){
     return{
@@ -109,7 +118,6 @@ data(){
             name:"Chandler's Birthday Cake",
             date:"22-08-2020",
             budget:1500,
-            remaining:0,
             items:[
                 {
                   id:1515156,
@@ -142,6 +150,9 @@ data(){
       ]
     }},
     methods:{
+        saveNewList(newList){
+            this.shoppingLists.unshift(newList)
+        },
         showAddBox(listID,e){
             this.targetList = listID
             document.querySelector('#updateItemBt').style.zIndex = "-1";
@@ -254,6 +265,7 @@ data(){
           }
           targetList.items.unshift(newItem)
           this.clearData()  
+          document.querySelector('.closeAddBox').classList.remove('closeAddBox')
       }
   },
   created(){
@@ -317,7 +329,28 @@ data(){
         font-weight: 400;
     }
     .itemsContainer{
+        height: 0;
+        overflow: hidden;
         /* margin-bottom: 25px; */
+    }
+    .expandedList{
+        position: fixed;
+        top:0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 2;
+        margin-top: 0;
+    }
+    .expandedList .itemsContainer{
+        height: 82%;
+    }
+    .listExpanded #addBt{
+        display: none;
+    }
+    .listExpanded #nav{
+        display: none;
+
     }
     .item{
         display: grid;
@@ -438,7 +471,7 @@ data(){
         position: fixed;
         top:26%;
         width: 85%;
-        right: 15px;
+        left:10px;
         /* height: 20vh; */
         background: linear-gradient(-150deg,#9900FF,#FF0080);
         color: white;
