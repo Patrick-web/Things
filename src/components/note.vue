@@ -65,7 +65,7 @@ created(){
         color: rgb(31, 31, 31);
         padding: 10px;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-weight: 100;
+        font-weight: 300;
         font-size: var(--font-size);
         line-height: 1.4rem;
         overflow-y: scroll;

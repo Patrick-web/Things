@@ -60,7 +60,7 @@ export default {
   left:50%;
   transform:translateX(-50%);
   bottom: 0px;
-  z-index: 3;
+  z-index: 5;
   transition: 0.3s ease-out all;
   display:flex;
   box-shadow: 0px -2px 8px rgba(128, 128, 128, 0.623);

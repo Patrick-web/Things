@@ -33,7 +33,7 @@
                 <img src="@/assets/yes.svg" style="margin-top:20px;width:27px;display:block;position:absolute" alt="">
             </div>
        </div>
-      <div v-bind:key="list.id" v-for="list in shoppingLists" class="shopping-list expandedList">
+      <div v-bind:key="list.id" v-on:click.stop="toggleExpansion($event)" v-for="list in shoppingLists" class="shopping-list">
 
           <p id="listId" style="display:none">{{list.id}}</p>
           <p class="listTitle">{{list.name}}</p>
@@ -126,6 +126,48 @@ data(){
                   howMany:2,
                   isAcquired:false
                 },
+                {
+                  id:151556,
+                  itemName:"Backing Powder",
+                  price:50,
+                  howMany:2,
+                  isAcquired:false
+                },
+                {
+                  id:15556,
+                  itemName:"Backing Powder",
+                  price:50,
+                  howMany:2,
+                  isAcquired:false
+                },
+                {
+                  id:1516,
+                  itemName:"Backing Powder",
+                  price:50,
+                  howMany:2,
+                  isAcquired:false
+                },
+                {
+                  id:1556,
+                  itemName:"Backing Powder",
+                  price:50,
+                  howMany:2,
+                  isAcquired:false
+                },
+                {
+                  id:156,
+                  itemName:"Backing Powder",
+                  price:50,
+                  howMany:2,
+                  isAcquired:false
+                },
+                {
+                  id:15,
+                  itemName:"Backing Powder",
+                  price:50,
+                  howMany:2,
+                  isAcquired:false
+                },
     
                 ]
           }, 
@@ -150,6 +192,11 @@ data(){
       ]
     }},
     methods:{
+        toggleExpansion(e){
+            const list = e.currentTarget;
+            list.classList.add('expandedList')
+            document.body.classList.add('listExpanded')
+        },
         saveNewList(newList){
             this.shoppingLists.unshift(newList)
         },
@@ -190,7 +237,9 @@ data(){
         showEditBox(itemID,listID){
             document.body.classList.toggle('addingItem');
             document.querySelector('#updateItemBt').style.zIndex = "3";
-            
+            const tg = document.querySelector('.expandedList');
+            const tgAddBt  = tg.querySelector('.addShoppingItem');
+            tgAddBt.classList.toggle('closeAddBox')            
             const targetListIndex = this.shoppingLists.map(list=>list.id)
             .indexOf(listID)
             const targetItemIndex  = this.shoppingLists[targetListIndex].items.map(item=>item.id)
@@ -216,6 +265,9 @@ data(){
             this.shoppingLists[this.indexOfTargetList].items[this.indexOfTargetItem].price = this.price;
             this.shoppingLists[this.indexOfTargetList].items[this.indexOfTargetItem].howMany = this.howMany;
             this.clearData()
+            const tg = document.querySelector('.expandedList');
+            const tgAddBt  = tg.querySelector('.addShoppingItem');
+            tgAddBt.classList.remove('closeAddBox') 
         },
         clearData(){
           document.querySelector('#itemName').value = '';
@@ -315,6 +367,7 @@ data(){
         position: relative;
         margin-bottom: 10px;
         margin-top: 10px;
+        transition: 0.4s ease;
     }
     .listContainer{
         position: relative;
@@ -330,7 +383,7 @@ data(){
     }
     .itemsContainer{
         height: 0;
-        overflow: hidden;
+        overflow-y: scroll;
         /* margin-bottom: 25px; */
     }
     .expandedList{
@@ -339,7 +392,7 @@ data(){
         right: 0;
         left: 0;
         bottom: 0;
-        z-index: 2;
+        z-index: 6;
         margin-top: 0;
     }
     .expandedList .itemsContainer{
@@ -410,9 +463,16 @@ data(){
         border-left: 1px solid rgb(157, 166, 168);
     }
     .bottomInfo{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
         border-top: purple 1px solid;
         background: rgba(128, 0, 128, 0.315);
         padding: 10px;
+        display: none;
+    }
+    .expandedList .bottomInfo{
+        display: block;
     }
     #total{
         background: purple;
@@ -446,13 +506,17 @@ data(){
     }
     .addShoppingItem{
         transition: 0.2s ease-in-out;
-        width: 40px;
+        width: 0px;
         right: 10px;
         border-radius: 100%;
         background: linear-gradient(150deg,rgb(255, 0, 255),rgb(76, 0, 255));
-        padding: 5px;
+        padding: 0px;
         box-shadow: 0px 0px 15px rgb(50, 60, 71);
         /* transform-origin: top; */
+    }
+    .expandedList .addShoppingItem{
+        width: 40px;
+        padding: 5px;
     }
     .closeAddBox{
         transform: rotate(135deg);
@@ -467,11 +531,11 @@ data(){
         transform-origin: right;
         transition: 0.2s ease-in-out;
         border-radius: 20px;  
-        z-index: 6;
+        z-index: 7;
         position: fixed;
         top:26%;
         width: 85%;
-        left:10px;
+        right:10px;
         /* height: 20vh; */
         background: linear-gradient(-150deg,#9900FF,#FF0080);
         color: white;
