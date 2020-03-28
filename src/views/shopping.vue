@@ -2,7 +2,6 @@
   <div class="shoppingContainer ">
       <addShoppingList v-on:addNewList="saveNewList"/>
 
-      <!-- <div class="overlay"></div> -->
 
       <div class="titleArea view">
           <p>Shopping List</p>
@@ -33,16 +32,17 @@
                 <img src="@/assets/yes.svg" style="margin-top:20px;width:27px;display:block;position:absolute" alt="">
             </div>
        </div>
-      <div v-bind:key="list.id" v-on:click.stop="toggleExpansion($event)" v-for="list in shoppingLists" class="shopping-list">
-
+      <div v-bind:key="list.id" v-on:click.stop="toggleExpansion($event)" v-for="(list,index) in shoppingLists" class="shopping-list">
+          <p id="listIndex" style="display:none">{{index}}</p>
           <p id="listId" style="display:none">{{list.id}}</p>
           <p class="listTitle">{{list.name}}</p>
           <div class="btWrapper" style="display:flex;align-items:center;justify-content:center">
             <img class="addShoppingItem" v-on:click="showAddBox(list.id,$event)" src="@/assets/plus.svg" alt="">
           </div>
-          <div class="itemsContainer">
+          <div  class="itemsContainer">
 
-              <div  v-bind:key="item.id" v-for="item in list.items" class="item">
+              <div  v-bind:key="item.id" v-for="(item,index) in list.items" class="item">
+                <p style="display:none">{{index}}</p>
               <div class="options">
                   <img v-on:click="showEditBox(item.id,list.id)" src="@/assets/editIcon.svg" alt="">
                   <img v-on:click="showConfirmBox(item.id,list.id)" src="@/assets/trashIcon.svg" alt="">
@@ -71,6 +71,8 @@
                 </div>
               </div>
           </div>
+          <actionsBar id="actionBar"/>
+          <img src="@/assets/triangle.svg" v-on:click="showActionsBar" width="20px" id="actionBarToggle" alt="">
           <div class="bottomInfo">
               <div class="pillsContainer">
                   <div id="total" style="margin-right:30px" class="pill">
@@ -95,13 +97,15 @@
 import { uuid } from 'uuidv4'
 import confirmDelete from '@/components/confirmDelete.vue'
 import addShoppingList from '@/components/addShoppingList.vue'
+import actionsBar from '@/components/actionsBar.vue'
 import addBt from '@/components/addBt.vue'
 
 export default {
 components:{
     confirmDelete,
     addShoppingList,
-    addBt
+    addBt,
+    actionsBar
 },
 data(){
     return{
@@ -192,6 +196,9 @@ data(){
       ]
     }},
     methods:{
+        showActionsBar(e){
+            e.target.parentElement.classList.toggle('actions-visible')
+        },
         toggleExpansion(e){
             const list = e.currentTarget;
             list.classList.add('expandedList')
@@ -384,8 +391,46 @@ data(){
     .itemsContainer{
         height: 0;
         overflow-y: scroll;
+        position: absolute;
+        width: 100%;
+        bottom: 10%;
+        margin-top: 10px;
         /* margin-bottom: 25px; */
     }
+    #actionBar{
+        box-shadow: 0px 0px 30px rgba(141, 141, 141, 0.452);
+        position:absolute;
+        width:90%;
+        background:#f0f0f0;
+        border-radius:50px;
+        display: block;
+        bottom:0%;
+        opacity: 0;
+        transition: 0.2s ease-in;
+        transform: scaleY(0);
+        left:50%;
+        transform: scaleY(0) translateX(-50%);
+   }
+   #actionBarToggle{
+       position: absolute;
+       bottom: 10%;
+       left:50%;
+       transform: translateX(-50%) rotate(0deg);
+       transform-origin:center;
+       transition: 0.2s;
+       display: none;
+   }
+   .actions-visible #actionBar{
+       bottom: 13%;
+       opacity: 1;
+       transform: translateX(-50%) scaleY(1);
+   }
+   .actions-visible #actionBarToggle{
+       transform: translateX(-50%) rotate(180deg);
+   }
+   .expandedList #actionBarToggle{
+       display: block;
+   }
     .expandedList{
         position: fixed;
         top:0;
@@ -394,6 +439,7 @@ data(){
         bottom: 0;
         z-index: 6;
         margin-top: 0;
+        margin-bottom: 0;
     }
     .expandedList .itemsContainer{
         height: 82%;
@@ -470,6 +516,7 @@ data(){
         background: rgba(128, 0, 128, 0.315);
         padding: 10px;
         display: none;
+        height: 10%;
     }
     .expandedList .bottomInfo{
         display: block;
@@ -556,10 +603,14 @@ data(){
     .addItemBox label{
         font-size: 1.3rem;
     }
+    #itemName{
+        width: 83%;
+    }
     .fgroups{
         margin-top: 10px;
         display: grid;
         grid-template-columns: 1fr 1fr;
+        margin-right: 10px;
     }
     #saveItemBt,#updateItemBt{
         position: absolute;

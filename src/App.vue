@@ -52,6 +52,7 @@ body{
   background: rgb(218, 216, 216);
   position: relative;
   height: 100vh;
+  width: 100%;
 }
 
 

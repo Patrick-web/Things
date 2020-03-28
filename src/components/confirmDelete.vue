@@ -1,6 +1,6 @@
 <template>
   <div class="confirm">
-      <p class="text">Continue To Delete ?</p>
+      <p class="question">Continue To Delete ?</p>
       <div class="option-btns">
           <img src="@/assets/cancel.svg" v-on:click="hideConfirmBox" alt="" class="btn">
           <img src="@/assets/yes.svg" v-on:click="deleter" alt="" class="btn">
@@ -31,7 +31,18 @@ export default {
         
                     },1100)//delay is to allow fade out animation
                 }else if(cls == "view=Shopping"){
-                    this.$emit('deleteShoppingItem');
+                    
+                    const confirmBox = document.querySelector('.confirm')
+                    const question = confirmBox.querySelector('.question');
+                    if(question.textContent =="Delete Shopping List ?" ){
+                        const targetList = document.querySelector('.listExpanded')
+                        const indexOfTarget = targetList.querySelector('#listIndex').textContent;
+                        this.$emit('deleteShoppingList',indexOfTarget);
+                    }else{
+                        this.$emit('deleteShoppingItem');
+                        
+                    }
+
                     // alert("deleting shopping item")
                 }else if(cls == "view=Tasks"){
                     alert("deleting a task")
@@ -62,7 +73,7 @@ export default {
     border-radius: 10px;
     height: 40vh;
 }
-.text{
+.question{
     color: white;
     margin: 5px;
     font-size: 1.5rem;

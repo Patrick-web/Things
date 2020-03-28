@@ -10,17 +10,31 @@
 export default {
   methods:{
     confirmDelete(){
-       const targetNote = document.querySelector('.expand');
-       const noteId = targetNote.querySelector('#noteId').textContent
-       document.querySelector('.confirm').style.right="10px";
+      if(document.body.classList.contains('view=Shopping')){
+         const confirmBox = document.querySelector('.confirm')
+         confirmBox.style.right="10px";
+         const question = confirmBox.querySelector('.question');
+         question.textContent = "Delete Shopping List ?"
+      }else if(document.body.classList.contains('view=Notes')){
+         const targetNote = document.querySelector('.expand');
+         const noteId = targetNote.querySelector('#noteId').textContent
+         document.querySelector('.confirm').style.right="10px";
+      }
     },
     collapseNote(){
-      document.body.classList.remove('note-expanded')
-      document.querySelector('.expand').classList.remove('expand')
-      const updateBt = document.querySelector('#updateNote');
-      updateBt.style.transform = "scale(0)"
-      document.querySelector('.confirm').style.right = "-200px"
+      if(document.body.classList.contains('view=Shopping')){
+        
+        document.querySelector('.expandedList').classList.remove('expandedList')
+        document.body.classList.remove('listExpanded');
+        document.querySelector('.actions-visible').classList.remove('actions-visible')
 
+      }else if(document.body.classList.contains('view=Notes')){
+        document.body.classList.remove('note-expanded')
+        document.querySelector('.expand').classList.remove('expand')
+        const updateBt = document.querySelector('#updateNote');
+        updateBt.style.transform = "scale(0)"
+        document.querySelector('.confirm').style.right = "-200px"
+      }
     }
   },
 created(){
@@ -43,9 +57,9 @@ created(){
   text-align: center;
   padding: 10px;
   border-radius: 3px;
-  transition: 0.3s ease-in all;
-
-
+  left:50%;
+  transform: translateX(-50%);
+  
 }
 .expand .actionsContainer{
   display: flex;
