@@ -1,12 +1,16 @@
 <template>
-    <div id="addBt" class="add-note">
+    <div v-on:click="showAddArea" id="addBt" class="add-note">
         <img class="addImg" src="@/assets/plus.svg" alt="">
     </div>
 </template>
 
 <script>
 export default {
-
+methods:{
+  showAddArea(){
+    document.body.classList.toggle('addingSomething');
+  }
+}
 }
 </script>
 
@@ -19,7 +23,7 @@ export default {
   top:79%;
   left:50%;
   transform: translateX(-50%);
-  z-index: 8;
+  z-index: 10;
   width: 50px;
   height: 50px;
   transition: 0.2s ease-in-out all;

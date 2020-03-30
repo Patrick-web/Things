@@ -1,8 +1,9 @@
 <template>
   <div class="main-container">
     <div class="view-container">
+      <router-view/>
       <!-- <stickys class="stickyView"/> -->
-      <shoppingLists class="shoppingView"/>
+      <!-- <shoppingLists class="shoppingView"/> -->
     </div>
     <div class="cover"></div>
     <navbar/>
@@ -28,14 +29,7 @@ export default {
   },
   created() {
     
-    setTimeout(()=>{
-    const addBtNote = document.querySelector('.add-note');
-
-    addBtNote.addEventListener('click',(e)=>{
-      document.body.classList.toggle('addingSomething');
-      // alert("addBt clicked")
-    })
-    },0)
+    document.body.classList.add('view=Notes')
   }
 
 }

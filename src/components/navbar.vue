@@ -20,6 +20,11 @@ export default {
       document.body.classList.remove('view=Notes');
       document.body.classList.remove('view=Tasks');
       document.body.classList.remove('addingSomething');
+      console.log(this.$router.currentRoute.path);
+      
+      if(this.$router.currentRoute.path != '/shopping'){
+        this.$router.push('/shopping')
+      }
     },
     goToNotes(){
       const nav = document.querySelector("#nav");
@@ -30,6 +35,10 @@ export default {
       document.body.classList.remove('view=Shopping');
       document.body.classList.remove('view=Tasks');
       document.body.classList.remove('addingSomething');
+      console.log(this.$router.currentRoute.path);
+      if(this.$router.currentRoute.path != '/'){
+        this.$router.push('/')
+      }
 
     },
     goToTasks(){
@@ -41,6 +50,8 @@ export default {
       document.body.classList.remove('view=Notes');
       document.body.classList.remove('view=Shopping');
       document.body.classList.remove('addingSomething');
+      this.$router.push('tasks')
+
     },
 
   }
@@ -49,6 +60,7 @@ export default {
 
 <style>
 #nav{
+  overflow: hidden;
   background: linear-gradient(60deg,rgb(0, 81, 255),rgb(0, 195, 255));
   display: flex;
   align-items: center;
