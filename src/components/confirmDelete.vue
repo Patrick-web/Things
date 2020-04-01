@@ -2,8 +2,12 @@
   <div class="confirm">
       <p class="question">Continue To Delete ?</p>
       <div class="option-btns">
-          <img src="@/assets/cancel.svg" v-on:click="hideConfirmBox" alt="" class="btn">
-          <img src="@/assets/yes.svg" v-on:click="deleter" alt="" class="btn">
+          <div class="iconWrapper">
+            <img src="@/assets/cancel.svg" v-on:click="hideConfirmBox" alt="" class="btn">
+          </div>
+          <div class="iconWrapper">
+              <img src="@/assets/yes.svg" v-on:click="deleter" alt="" class="btn">
+          </div>
       </div>
   </div>
 </template>
@@ -13,6 +17,7 @@ export default {
     methods:{
         deleter(){
             document.querySelector('.confirm').style.right = "-200px"
+            document.querySelector('.confirm').style.display = "block"
             const bodyClasses = Array.from(document.body.classList)
 
             bodyClasses.forEach((cls)=>{
@@ -26,21 +31,18 @@ export default {
 
                     setTimeout(()=>{
                         this.$emit('deleteSticky',id);
-                        const updateBt = document.querySelector('#updateNote');
-                        updateBt.style.transform = "scale(0)"
-        
                     },1100)//delay is to allow fade out animation
                 }else if(cls == "view=Shopping"){
                     
                     const confirmBox = document.querySelector('.confirm')
                     const question = confirmBox.querySelector('.question');
-                    if(question.textContent =="Delete Shopping List ?" ){
-                        const targetList = document.querySelector('.listExpanded')
+                    if(question.textContent =="Delete this Shopping List ?" ){
+                        const targetList = document.querySelector('.expandedList')
                         const indexOfTarget = targetList.querySelector('#listIndex').textContent;
-                        this.$emit('deleteShoppingList',indexOfTarget);
+                        this.$emit('deleteShopping__',indexOfTarget);
+
                     }else{
-                        this.$emit('deleteShoppingItem');
-                        
+                        this.$emit('deleteShopping__');
                     }
 
                     // alert("deleting shopping item")
@@ -65,13 +67,16 @@ export default {
     z-index: 8;
     top:50%;
     right: -200px;
+    /* display: none; */
     transform: translateY(-50%);
     transition: 0.1s;
     text-align: center;
     width: 45vw;
-    background:linear-gradient(150deg,#96004b,#920086);
+    background:linear-gradient(150deg,#d1037b,#750092);
     border-radius: 10px;
     height: 40vh;
+    box-shadow: 0px 0px 5px #BDBDBD;
+
 }
 .question{
     color: white;
@@ -86,10 +91,21 @@ export default {
     column-gap: 10px;
     position: absolute;
     bottom: 10px;
-    left: 65% ;
+    left: 60% ;
     transform:translateX(-50%)
 }
+.iconWrapper{
+    background: rgba(255, 255, 255, 0.212);
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+}
 .btn{
-    width: 30px;
+    width: 38px;
+    height: 38px;
+    padding: 8px;
 }
 </style>

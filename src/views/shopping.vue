@@ -1,28 +1,28 @@
 <template>
   <div class="shoppingContainer ">
-      <addShoppingList v-on:addNewList="saveNewList"/>
+      <addShoppingList v-on:addOrEditList="addOrEditList"/>
 
 
       <div class="titleArea view">
           <p>Shopping List</p>
       </div>
-    <confirmDelete v-on:deleteShoppingItem="deleteItem"/>
+    <confirmDelete v-on:deleteShopping__="delete__"/>
    <div style="margin-top:55px" class="listsContainer">
 
 
         <div class="addItemBox">
             <div class="fgroup">
                 <label for="itemName">Item</label>
-                <input type="text" v-model="itemName" id="itemName">
+                <input type="text" v-model="itemName" v-on:keyup.enter="focusOnPrice" id="itemName">
             </div>
             <div class="fgroups">
                 <div class="fgroup">
                     <label for="">Price</label>
-                    <input v-model="price" inputmode="numeric" type="text"  id="price">
+                    <input v-model="price" inputmode="numeric" type="text" v-on:keyup.enter="focusOnAmount" id="price">
                 </div>
                 <div class="fgroup">
                     <label for="">Amount</label>
-                    <input v-model="howMany" inputmode="numeric" type="text"  id="amount">
+                    <input v-model="howMany" inputmode="numeric" type="text" id="amount">
                 </div>
             </div>
             <div id="saveItemBt" v-on:click="addNewItem()" ><p style="margin-top:-20px">Add</p> 
@@ -32,15 +32,18 @@
                 <img src="@/assets/yes.svg" style="margin-top:20px;width:27px;display:block;position:absolute" alt="">
             </div>
        </div>
+    <transition-group name="slideIn" enter-active-class="animated faster fadeInRight" leave-active-class="animated fast fadeOutLeft">
       <div v-bind:key="list.id" v-on:click.stop="toggleExpansion($event)" v-for="(list,index) in shoppingLists" class="shopping-list">
           <p id="listIndex" style="display:none">{{index}}</p>
           <p id="listId" style="display:none">{{list.id}}</p>
           <p class="listTitle">{{list.name}}</p>
+          <p class="listBudget" style="display:none">{{list.budget}}</p>
           <div class="btWrapper" style="display:flex;align-items:center;justify-content:center">
             <img class="addShoppingItem" v-on:click="showAddBox(list.id,$event)" src="@/assets/plus.svg" alt="">
           </div>
           <div  class="itemsContainer">
-
+              <br>
+         <transition-group name="slideIn" enter-active-class="animated faster lightSpeedIn" leave-active-class="animated fast hinge">
               <div  v-bind:key="item.id" v-for="(item,index) in list.items" class="item">
                 <p style="display:none">{{index}}</p>
               <div class="options">
@@ -70,9 +73,11 @@
                     <p style="display:none" class="acquired">Acquired</p>
                 </div>
               </div>
+     </transition-group>
+
           </div>
-          <actionsBar id="actionBar"/>
-          <img src="@/assets/triangle.svg" v-on:click="showActionsBar" width="20px" id="actionBarToggle" alt="">
+          <actionsBar v-on:editList="editList" id="actionBar"/>
+          <!-- <img src="@/assets/triangle.svg" v-on:click.stop="showActionsBar" width="20px" id="actionBarToggle" alt=""> -->
           <div class="bottomInfo">
               <div class="pillsContainer">
                   <div id="total" style="margin-right:30px" class="pill">
@@ -86,6 +91,8 @@
               </div>
           </div>
       </div>
+    </transition-group>
+
    </div>
    <addBt/>
   </div>
@@ -115,87 +122,21 @@ data(){
         indexOfTargetItem:0,
         indexOfTargetList:0,
         targetList:'',
-        shoppingLists:[
-          {
-            test:"",
-            id:26226652,
-            name:"Chandler's Birthday Cake",
-            date:"22-08-2020",
-            budget:1500,
-            items:[
-                {
-                  id:1515156,
-                  itemName:"Backing Powder",
-                  price:50,
-                  howMany:2,
-                  isAcquired:false
-                },
-                {
-                  id:151556,
-                  itemName:"Backing Powder",
-                  price:50,
-                  howMany:2,
-                  isAcquired:false
-                },
-                {
-                  id:15556,
-                  itemName:"Backing Powder",
-                  price:50,
-                  howMany:2,
-                  isAcquired:false
-                },
-                {
-                  id:1516,
-                  itemName:"Backing Powder",
-                  price:50,
-                  howMany:2,
-                  isAcquired:false
-                },
-                {
-                  id:1556,
-                  itemName:"Backing Powder",
-                  price:50,
-                  howMany:2,
-                  isAcquired:false
-                },
-                {
-                  id:156,
-                  itemName:"Backing Powder",
-                  price:50,
-                  howMany:2,
-                  isAcquired:false
-                },
-                {
-                  id:15,
-                  itemName:"Backing Powder",
-                  price:50,
-                  howMany:2,
-                  isAcquired:false
-                },
-    
-                ]
-          }, 
-          {
-            test:"",
-            id:266652,
-            name:"Back to school",
-            date:"22-08-2020",
-            budget:3000,
-            remaining:0,
-            items:[
-                {
-                  id:1556156,
-                  itemName:"Bic pen",
-                  price:25,
-                  howMany:2,
-                  isAcquired:false
-                },
-    
-                ]
-          }   
-      ]
+        shoppingLists:[]
     }},
     methods:{
+        //Micro Interactions
+        focusOnPrice(){
+            document.querySelector('#price').focus()
+        },
+        focusOnAmount(){
+            document.querySelector('#amount').focus()
+
+        },
+        focusOnListName(){
+            document.querySelector('#shoppingListName').focus()
+
+        },
         showActionsBar(e){
             e.target.parentElement.classList.toggle('actions-visible')
         },
@@ -203,15 +144,34 @@ data(){
             const list = e.currentTarget;
             list.classList.add('expandedList')
             document.body.classList.add('listExpanded')
+            list.classList.add('actions-visible');
+            // setTimeout(()=>{
+            //     list.classList.remove('actions-visible');
+            // },2000)
+
+        },
+        addOrEditList(list,index){
+            if(index>-1){
+                this.editList(list,index)
+            }else{
+                this.saveNewList(list)
+            }
         },
         saveNewList(newList){
             this.shoppingLists.unshift(newList)
+            localStorage.setItem('shoppingLists',JSON.stringify(this.shoppingLists))
+
+        },
+        editList(edit,index){
+            this.shoppingLists[index].name = edit.name
+            this.shoppingLists[index].budget = edit.budget
         },
         showAddBox(listID,e){
             this.targetList = listID
             document.querySelector('#updateItemBt').style.zIndex = "-1";
             document.body.classList.toggle('addingItem')
             e.target.classList.toggle('closeAddBox');
+            document.querySelector('#itemName').focus()
         },
         showOptions(e){
             const itemSelected = event.currentTarget.parentElement;
@@ -224,8 +184,11 @@ data(){
             }
         },
         showConfirmBox(itemID,listID){
-          document.querySelector('.confirm').style.right="10px";
-
+          const confirmBox = document.querySelector('.confirm');
+          confirmBox.style.display="block";
+          confirmBox.style.right="10px";
+         const question = confirmBox.querySelector('.question');
+         question.textContent = "Delete this Item ?"
             //Get index of target list
             //get index of target item
             //splice out the item at that index
@@ -235,11 +198,25 @@ data(){
             
             const targetItemID  = this.shoppingLists[targetListID].items.map(item=>item.id)
             .indexOf(itemID)
-            
             this.indexOfTargetItem = targetItemID
         },
+        delete__(indexOfTargetList){
+            if(indexOfTargetList!=undefined){
+                this.deleteList(indexOfTargetList)
+            }else{
+                this.deleteItem()
+            }
+        },
         deleteItem(){
-            this.shoppingLists[this.indexOfTargetList].items.splice(this.indexOfTargetItem,1)
+            this.shoppingLists[this.indexOfTargetList].items.splice(this.indexOfTargetItem,1);
+            localStorage.setItem('shoppingLists',JSON.stringify(this.shoppingLists))
+        },
+        deleteList(listIndex){
+            console.log(listIndex);
+            this.shoppingLists.splice(listIndex,1)
+            localStorage.setItem('shoppingLists',JSON.stringify(this.shoppingLists))
+            document.body.classList.remove('listExpanded')
+
         },
         showEditBox(itemID,listID){
             document.body.classList.toggle('addingItem');
@@ -275,6 +252,8 @@ data(){
             const tg = document.querySelector('.expandedList');
             const tgAddBt  = tg.querySelector('.addShoppingItem');
             tgAddBt.classList.remove('closeAddBox') 
+            localStorage.setItem('shoppingLists',JSON.stringify(this.shoppingLists))
+
         },
         clearData(){
           document.querySelector('#itemName').value = '';
@@ -307,34 +286,39 @@ data(){
                   item.isAcquired = !item.isAcquired;
               }
           }) 
+        localStorage.setItem('shoppingLists',JSON.stringify(this.shoppingLists))
+
       },
       addNewItem(){
-        let targetList;
-          this.shoppingLists.forEach((list)=>{
-              if(list.id == this.targetList){
-                  targetList = list;
-              }
-          })
-          const newItem = {
-              id:uuid(),
-              itemName:this.itemName,
-              howMany:parseInt(this.howMany),
-              price:parseInt(this.price),
-              isAcquired:false
+        if(this.itemName!='' && this.howMany!='' && this.price!=''){
+            let targetList;
+            this.shoppingLists.forEach((list)=>{
+                if(list.id == this.targetList){
+                    targetList = list;
+                }
+            })
+
+            const newItem = {
+                id:uuid(),
+                itemName:this.itemName,
+                howMany:parseInt(this.howMany),
+                price:parseInt(this.price),
+                isAcquired:false
+            }
+            targetList.items.unshift(newItem)
+            this.clearData()  
+            document.querySelector('.closeAddBox').classList.remove('closeAddBox')
+
+            localStorage.setItem('shoppingLists',JSON.stringify(this.shoppingLists))
+
           }
-          targetList.items.unshift(newItem)
-          this.clearData()  
-          document.querySelector('.closeAddBox').classList.remove('closeAddBox')
       }
   },
   created(){
+      if(JSON.parse(localStorage.getItem("shoppingLists"))){
+          this.shoppingLists = JSON.parse(localStorage.getItem("shoppingLists"))
+      }
       setTimeout(()=>{
-        //   const addItemBt = document.querySelector('.addShoppingItem');
-        //   addItemBt.addEventListener('click',()=>{
-        //       document.querySelector('#updateItemBt').style.zIndex = "-1";
-        //       document.body.classList.toggle('addingItem')
-        //   })
-
           const items = document.querySelectorAll('.item');
           items.forEach((item)=>{
               let isAcquired = item.querySelector('#isAcquired').textContent;
@@ -348,16 +332,6 @@ data(){
                     item.classList.remove('itemAcquired')
                     isAcquired ='false'
               }
-              function toggler(){
-                  if(isAcquired=="true"){
-                        item.classList.remove('itemAcquired');
-                        isAcquired ='false'
-                  }else{
-                      item.classList.add('itemAcquired')
-                        isAcquired ='true'
-                  }
-              }
-              doneBt.addEventListener('click',toggler)
           })
           
       },0)
@@ -376,8 +350,10 @@ data(){
         margin-top: 10px;
         transition: 0.4s ease;
     }
-    .listContainer{
+    .listsContainer{
         position: relative;
+        padding-bottom: 55px;
+        padding-top: 0px;
     }
     .listTitle{
         --purple:rgb(147, 3, 204);
@@ -398,7 +374,7 @@ data(){
         /* margin-bottom: 25px; */
     }
     #actionBar{
-        box-shadow: 0px 0px 30px rgba(141, 141, 141, 0.452);
+        box-shadow: 0px 0px 20px rgb(153, 153, 153);
         position:absolute;
         width:90%;
         background:#f0f0f0;
@@ -407,21 +383,21 @@ data(){
         bottom:0%;
         opacity: 0;
         transition: 0.2s ease-in;
-        transform: scaleY(0);
         left:50%;
         transform: scaleY(0) translateX(-50%);
    }
    #actionBarToggle{
        position: absolute;
-       bottom: 10%;
+       bottom: 9.8%;
        left:50%;
+       width: 7%;
        transform: translateX(-50%) rotate(0deg);
        transform-origin:center;
        transition: 0.2s;
        display: none;
    }
    .actions-visible #actionBar{
-       bottom: 13%;
+       bottom: 11%;
        opacity: 1;
        transform: translateX(-50%) scaleY(1);
    }
@@ -440,9 +416,11 @@ data(){
         z-index: 6;
         margin-top: 0;
         margin-bottom: 0;
+        background: #EDE7F6;
     }
     .expandedList .itemsContainer{
         height: 82%;
+        padding-bottom: 70px;
     }
     .listExpanded #addBt{
         display: none;
@@ -455,11 +433,13 @@ data(){
         display: grid;
         grid-template-columns: 4fr 1fr;
         padding: 5px;
-        background: lavender;
+        background: white;
         margin: 5px;
         position: relative;
         margin-bottom: 5px;
-        transition: 0.1s ease-in-out;
+        transition: 0.2s ease;
+        box-shadow: 2px 2px 5px #BDBDBD;
+
     }
     .item-name{
         font-size: 1.3rem;
@@ -534,14 +514,13 @@ data(){
         height: 35px;
         width: 35px;
         border: 1px solid;
-        border-color:rgb(0, 174, 255);
+        border-color:#8E24AA;
         border-radius: 100%;
         transition: 0.2s;
     }
     .itemAcquired .doneBt{
-        background: linear-gradient(rgb(0, 76, 255),rgb(0, 174, 255));
+        background: #8E24AA;
         border-color:none;
-        border-radius: 10%;
 
     }
     .btWrapper{
@@ -642,20 +621,22 @@ data(){
         /* transform: translateX(-50%); */
         bottom:-44px;
         padding: 2px;
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-        background: lavender;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        background: white;
         /* width: 100%; */
         transform: scaleY(0);
         transform-origin: top;
-        transition: 0.1s ease-in;
+        transition: 0.15s;
+        box-shadow: 5px 5px 5px #BDBDBD;
+
     }
     .options img{
         width: 40px;
         margin-right: 5px;
         margin-left: 5px;
         transform: scale(0);
-        transition: 0.25s ease-in-out;
+        transition: 0.2s;
     }
     .showOptions .options{
         transform: scaleY(1);
@@ -665,6 +646,9 @@ data(){
         transform: scale(1);
     }
     .showOptions{
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom-left-radius: 10px;
         margin-bottom: 48px;
     }
 </style>

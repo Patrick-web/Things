@@ -1,9 +1,10 @@
 <template>
   <div class="main-container">
     <div class="view-container">
-      <router-view/>
-      <!-- <stickys class="stickyView"/> -->
-      <!-- <shoppingLists class="shoppingView"/> -->
+      <transition name="slide" enter-active-class="animated fadeIn fast ">
+        <router-view/>
+      </transition>
+
     </div>
     <div class="cover"></div>
     <navbar/>
@@ -13,6 +14,7 @@
 <script>
 import stickys from '@/views/stickys.vue'
 import shoppingLists from '@/views/shopping.vue'
+import todo from '@/views/todo.vue'
 import navbar from '@/components/navbar.vue'
 export default {
   components:{
@@ -36,6 +38,7 @@ export default {
 </script>
 
 <style>
+@import "./assets/animate.css";
 *{
   margin: 0;
   padding: 0;

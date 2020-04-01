@@ -8,9 +8,12 @@
           <div class="textareaCover"></div>
           <p id="previewBox" class="txtArea">{{note.note}}</p>
           <p id="noteId">{{note.id}}</p>
-          <textarea v-model="note.note" id="actualtxtarea" class="txtArea"  name="" cols="30" rows="20">
+          <textarea v-model="note.note" v-on:keyup="showSaveIcon($event)" id="actualtxtarea" class="txtArea"  name="" cols="30" rows="20">
           </textarea>
           <actionsBar class="actions" v-on:updateNote="$emit(updateNote)"/>
+          <div class="saveEditBt" v-on:click="$emit('updateNote')" style="position:absolute;right:15px;top:45px">
+            <img src="@/assets/save.svg"  alt="">
+          </div>
       </div>
   </div>
 </template>
@@ -24,6 +27,12 @@ components:{
     actionsBar
 },
 props:["note"],
+methods:{
+    showSaveIcon(e){
+        const expanded = e.target.parentElement.parentElement;
+        expanded.querySelector('.saveEditBt').style.transform = "scale(1)"
+    }
+},
 created(){
     setTimeout(()=>{
         const notes = document.querySelectorAll('.note');
@@ -70,13 +79,28 @@ created(){
         line-height: 1.4rem;
         overflow-y: scroll;
     }
+    .saveEditBt{
+        background: rgba(0, 128, 0, 0.171);
+        width: 60px;
+        height: 60px;
+        /* padding: 10px; */
+        border-radius: 100%; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: scale(0);
+        transition: 0.2s;
+    }
+    .saveEditBt img{
+        width: 35px;
+    }
     .note{
         background:#f5f8fa;
         margin: 10px;
         position: relative;
         height: 19.5vh;
         overflow: hidden;
-        transition:0.1s;
+        transition:0.2s ease;
         box-shadow: 2px 2px 5px rgb(168, 168, 168);
     }
     .expand{

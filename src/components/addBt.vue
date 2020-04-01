@@ -9,18 +9,20 @@ export default {
 methods:{
   showAddArea(){
     document.body.classList.toggle('addingSomething');
+    document.body.classList.remove("edittingList")
+
   }
 }
 }
 </script>
 
-<style>
+<style scoped>
 #addBt{
   border-radius: 80%;
   background: rgb(123, 0, 238);
   padding: 10px;
   position: fixed;
-  top:79%;
+  top:78%;
   left:50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -32,6 +34,9 @@ methods:{
   justify-content: center;
   align-items: center;
   box-shadow: 0px 0px 20px rgba(68, 68, 68, 0.753);
+}
+.listExpanded #addBt{
+  display: none;
 }
 .addingSomething #addBt{
   background: rgb(255, 0, 157);;

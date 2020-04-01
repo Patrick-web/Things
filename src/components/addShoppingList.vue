@@ -1,18 +1,23 @@
 <template>
   <div class="mainCont">
-      <p class="containerTitle">Shopping List</p>
+      <p class="containerTitle saveTitle">Shopping List</p>
+      <p class="containerTitle editTitle">Edit Shopping List</p>
       <div class="fgroup">
         <label class="nt">Name</label>
-        <input v-model="listName" name="budget" id="shoppingListName">
+        <input v-on:keyup.enter="focusOnBudget"  name="listName" id="shoppingListName">
       </div>
       <div class="fgroup">
         <label class="nt">Budget</label>
-        <input v-model="budget" inputmode="numeric" name="budget" id="budget">
+        <input v-on:keyup.enter="emitList" inputmode="numeric" name="budget" id="budget">
       </div>
     
       <div class="stickyOptions">
-          <div class="save" v-on:click="emitList">
+          <div class="saveBtnn btnn" v-on:click="emitList">
               <p>Save</p>
+              <img src="@/assets/save-white.svg" alt="">
+          </div>
+          <div class="editBtnn btnn" v-on:click="editList">
+              <p>Edit</p>
               <img src="@/assets/save-white.svg" alt="">
           </div>
       </div>
@@ -25,41 +30,61 @@ export default {
     name:"addSticky",
     data(){
         return{
-            listName:'',
-            budget:''
+
         }
     },
     methods:{
+        focusOnBudget(){
+            document.querySelector('#budget').focus()
+        },
         emitList(){
-            console.log(uuid());
             const today = new Date();
             const date = `${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}`
             const timeOfDay = (today.getHours())>12 ? 'PM' : "AM";
             const hour = (today.getHours())>12 ? today.getHours() - 12 :today.getHours();
             const minutes = (today.getMinutes())<10 ? `0${today.getMinutes()}` : today.getMinutes(); 
-            const time = `${hour}:${minutes} ${timeOfDay}`
+            const time = `${hour}:${minutes} ${timeOfDay}`;
+            
+            const listName = document.querySelector('#shoppingListName').value;
+            const listBudget =  document.querySelector('#budget').value;
             const newList = {
                 id:uuid(),
-                name:this.listName,
+                name:listName,
                 date:date,
-                budget:parseInt(this.budget),
+                budget:parseInt(listBudget),
                 items:[],
 
             }
             document.body.classList.toggle('addingSomething')
             document.querySelector('#shoppingListName').value = '';
             document.querySelector('#budget').value = '';
-            if(this.listName != '' && this.budget != ''){
-                this.$emit('addNewList',newList);
+            if(listName != '' && listBudget != ''){
+                this.$emit('addOrEditList',newList);
             }
             this.budget = '';
             this.listName = '';
+        },
+        editList(){
+            document.body.classList.remove("edittingList")
+            document.body.classList.remove("addingSomething")
+            const newName = document.querySelector('#shoppingListName').value;
+            const newBudget =  document.querySelector('#budget').value;
+            const edittedList = {
+                name: newName,
+                budget: parseInt(newBudget)
+            }
+            const index = parseInt(JSON.parse(localStorage.getItem('tlIndex')));
+            this.$emit('addOrEditList',edittedList,index);
+
         }
     }
 }
 </script>
 
 <style>
+.editTitle{
+    display: none;
+}
 .mainCont{
     background:linear-gradient(150deg,#ffffff,rgb(255, 255, 255));
     height: 280px;
@@ -72,11 +97,12 @@ export default {
     z-index: 7;
     position: fixed;
     top:-500px;
+    display: none;
     transition: 0.3s ease;
 }
 .addingSomething .mainCont{
     top:10px;
-
+    display: block;
 }
 .containerTitle{
     background: rgb(146, 0, 243);
@@ -113,6 +139,11 @@ export default {
 
 }
 .save{
+
+}
+.btnn{
+    position: absolute;
+    bottom: -40px;
     padding: 5px;
     width: 120px;
     background: rgb(1, 180, 120);
@@ -124,15 +155,27 @@ export default {
     border-radius: 20px;
     text-align: center;
 }
+.editBtnn{
+    display: none;
+}
+.edittingList .editBtnn{
+    display: flex;
+}
+.edittingList .editTitle{
+    display: block;
+}
+.edittingList .saveTitle{
+    display: none;
+}
+.editBtnn .saveBtnn{
+    display: none;
+}
 .stickyOptions{
     position: relative;
     margin-top: 10px;
     text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
-.save img{
+.btnn img{
     width: 25px;
     margin-left: 10px;
 }
@@ -153,7 +196,7 @@ export default {
     background: white;
     border: none;
     font-size: 1.3rem;
-    border-bottom: 1px solid rgb(32, 32, 32);
+    border-bottom: 1px solid rgb(119, 119, 119);
 }
 .overlay{
     z-index: 6;

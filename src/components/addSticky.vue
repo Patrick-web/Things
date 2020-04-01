@@ -2,7 +2,7 @@
   <div class="saveStickyContainer">
       <p class="containerTitle">Add Sticky Note</p>
       <p class="nt">Sticky</p>
-        <textarea v-model="note" name="" id="noteEntry" cols="30" rows="10"></textarea>
+        <textarea v-model="note" name="" id="noteEntry" ></textarea>
     
       <div class="stickyOptions">
           <div class="save" v-on:click="saveNote">
@@ -83,7 +83,7 @@ export default {
 }
 #noteEntry{
     width: 94%;
-    height: 60%;
+    height: 10%;
     background: rgb(216, 216, 216);
     border-radius: 0px;
     padding: 10px;

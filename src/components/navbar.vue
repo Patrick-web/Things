@@ -50,28 +50,32 @@ export default {
       document.body.classList.remove('view=Notes');
       document.body.classList.remove('view=Shopping');
       document.body.classList.remove('addingSomething');
-      this.$router.push('tasks')
+      if(this.$router.currentRoute.path != '/todo'){
+        this.$router.push('/todo')
+      }
 
     },
 
-  }
+  },
+
 }
 </script>
 
 <style>
 #nav{
   overflow: hidden;
-  background: linear-gradient(60deg,rgb(0, 81, 255),rgb(0, 195, 255));
+  background: linear-gradient(150deg,rgb(72, 1, 100),#690183);
   display: flex;
   align-items: center;
   justify-content: center;
   position: fixed;
   bottom:20px ;
   height: 60px;
-  width: 100%;
+  width: 95%;
   left:50%;
+  border-radius: 10px;
   transform:translateX(-50%);
-  bottom: 0px;
+  bottom: 5px;
   z-index: 5;
   transition: 0.3s ease-out all;
   display:flex;
@@ -88,21 +92,21 @@ export default {
 
 .current-shopping #shoppingIcon{
   position:absolute;
-  width:13%;
+  /* width:13%; */
   animation: wiggle;
-  animation-duration: 0.4s;
+  animation-duration: 0.3s;
 } 
 .current-tasks #tasksIcon{
   position:absolute;
-  width:13%;
+  /* width:13%; */
   animation: wiggle;
-  animation-duration: 0.4s;
+  animation-duration: 0.3s;
 } 
 .current-notes #notesIcon{
   position:absolute;
-  width:13%;
+  /* width:13%; */
   animation-name: wiggle;
-  animation-duration: 0.4s;
+  animation-duration: 0.3s;
 } 
 
 @keyframes wiggle{
@@ -128,27 +132,51 @@ export default {
   left:10px;
 }
 #tasksIcon{
-  right:10px;
+  right:13px;
 }
 .indicatorBar{
   position: absolute;
   width: 52px;
-  height: 5px;
-  bottom: 3px;
-  background: rgb(255, 255, 255);
-  border-radius: 5px;
-  transition: 0.2s ease-in-out;
+  height: 100%;
+  top:-5px;
+  bottom: 5px;
+  background: rgba(255, 255, 255, 0.137);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  transition: 0.2s;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .current-shopping .indicatorBar{
-  left:8px;
-  right:inherit;
+  border-top-left-radius: 0px;
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 0px;
+  height: 80%;
+  width: 60px;
+  left: 8.5%;
+  top:5px;
+
 } 
 .current-tasks .indicatorBar{
-  left:auto;
-  right:5px;
+  height: 80%;
+  top:5px;
+  left: 91%;
+  width: 68px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 25px;
+  border-top-left-radius: 25px;
+  border-bottom-right-radius: 0px;
+
+
 } 
 .current-notes .indicatorBar{
-  left:initial;
-  right:inherit;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  top:-5px;
+  height: 100%;
+  left: 50%;
 } 
 </style>

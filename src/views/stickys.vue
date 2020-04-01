@@ -44,6 +44,9 @@ export default {
             localStorage.setItem('stickynotes',JSON.stringify(notesStorage));
         },
         updateNote(){
+            setTimeout(()=>{
+                document.querySelector('.note-expanded').querySelector('.saveEditBt').style.transform = "scale(0)"
+            },500)
             const targetSticky = document.querySelector('.expand');
             const updatedNote = targetSticky.querySelector('textarea').value
             const id = targetSticky.querySelector('#noteId').textContent;
@@ -64,7 +67,10 @@ export default {
     },
     created(){
         const stickies = JSON.parse(localStorage.getItem('stickynotes'));
-        this.notes = [...stickies];
+        if(stickies){
+            this.notes = [...stickies];
+        }
+        console.log(this.$router.currentRoute.name);
     },
     data(){
         return{
@@ -86,6 +92,8 @@ export default {
 <style>
     .stickyContainer{
         position: relative;
+        padding-bottom: 55px;
+
     }
     .titleArea{
         height: 45px;
@@ -93,7 +101,7 @@ export default {
         width: 100%;
         top:0;
         z-index: 2;
-        background: #f5008f;
+        background: #690183;
         box-shadow: 2px 2px 10px rgba(61, 61, 61, 0.582);
         padding-bottom: 2px;
     }
@@ -109,6 +117,9 @@ export default {
     }
     .notesContainer{
         margin-top: 50px;
+        height: 100vh;
+        overflow-y: scroll;
+        padding-bottom: 60px;
         /* margin-bottom: 90px; */
     }
     .more{
