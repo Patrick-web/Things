@@ -8,7 +8,7 @@
       </div>
       <div class="fgroup">
         <label class="nt">Budget</label>
-        <input v-on:keyup.enter="emitList" inputmode="numeric" name="budget" id="budget">
+        <input v-on:keyup.enter="emitOrEdit" inputmode="numeric" name="budget" id="budget">
       </div>
     
       <div class="stickyOptions">
@@ -36,6 +36,14 @@ export default {
     methods:{
         focusOnBudget(){
             document.querySelector('#budget').focus()
+        },
+        emitOrEdit(){
+            if(document.body.classList.contains('edittingList')){
+                this.editList()
+
+            }else{
+                this.emitList()
+            }
         },
         emitList(){
             const today = new Date();
@@ -67,12 +75,14 @@ export default {
         editList(){
             document.body.classList.remove("edittingList")
             document.body.classList.remove("addingSomething")
-            const newName = document.querySelector('#shoppingListName').value;
-            const newBudget =  document.querySelector('#budget').value;
+            let newName = document.querySelector('#shoppingListName');
+            let newBudget =  document.querySelector('#budget');
             const edittedList = {
-                name: newName,
-                budget: parseInt(newBudget)
+                name: newName.value,
+                budget: parseInt(newBudget.value)
             }
+            newName.value='';
+            newBudget.value='';
             const index = parseInt(JSON.parse(localStorage.getItem('tlIndex')));
             this.$emit('addOrEditList',edittedList,index);
 

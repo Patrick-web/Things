@@ -1,27 +1,42 @@
 <template>
   <div class="mainTodoContainer">
-      <div class="titleArea">
-          <p>Tasks</p>
-          <img class="more" src="@/assets/more.svg" alt="">
-      </div>
+    <titleBar title="Tasks"/>
 
     <div  accept-charset="utf-8" class="formArea">
       <label for="to-do" style="font-weight:300">Task</label>
-      <input tyle="font-weight:300" v-on:keyup.enter="addOrEdit"  type="text" name="todo" id="todo" value="" />
-      <p v-on:click="addTodo" id="addBt" class="bt">Add</p>
+      <input style="font-weight:300" v-on:keyup.enter="addOrEdit"  type="text" name="todo" id="todo" value="" />
+      <p v-on:click="addTask" id="addBt" class="bt">Add</p>
       <p id="editBtn" v-on:click="saveEdit" class="bt">Save Edit</p>
     </div>
-
+    <datetime type="time" 
+      use12-hour
+     v-model="date">
+    </datetime>
+    <datetime type='date' 
+    :format="{ year: 'numeric', month: 'numeric', day: 'numeric',}"
+    v-model="time">
+    </datetime>
     <div class="todosContainer">
      <transition-group name="slideIn" enter-active-class="animated faster lightSpeedIn" leave-active-class="animated fast hinge">
-      <div :key="todo.id" v-on:click.stop=showActions($event) v-for="(todo,index) in todos" class="todo">
-        <p class="id">{{todo.id}}</p>
-        <p class="todoName">{{todo.todo}}</p>
-        <div v-on:click="markAsDone(todo.id)" v-bind:class="{completed:todo.isDone}" id="checker">
+      <div :key="task.id" v-on:click.stop=showActions($event) v-for="(task,index) in tasks" v-bind:class="{todoCompleted:task.isDone}" class="todo">
+        <div class="leftContainer">
+          <p class="id">{{task.id}}</p>
+          <p class="todoName">{{task.task}}</p>
+        </div>
+        
+        <div v-on:click.stop="markAsDone(task.id,$event)" v-bind:class="{completed:task.isDone}" class="rightContainer">
+          <div id="checker">
+          </div>
+          <div class="Info">
+            <p v-bind:class="{shownInfo:task.isDone}" v-if="task.isDone" class="info info-done">Done</p>
+            <p v-bind:class="{shownInfo:task.isPast}" class="info info-past">Past</p>
+            <p v-bind:class="{shownInfo:task.isNear}" class="info info-near">Near</p>
+          </div>
         </div>
         <div class="tactions">
-          <img class="ticon" v-on:click="editTodo(index)" id="editI" src="@/assets/editIcon.svg" alt="" />
-          <img class="ticon" v-on:click="deleteTodo(index)" id="delBt" src="@/assets/trashIcon.svg" alt="" />
+          <img class="ticon" v-on:click.stop="addSubTask(index)" id="editI" src="@/assets/subtask.svg" alt="" />
+          <img class="ticon" v-on:click.stop="editTask(index)" id="editI" src="@/assets/editIcon.svg" alt="" />
+          <img class="ticon" v-on:click.stop="deleteTask(index)" id="delBt" src="@/assets/trashIcon.svg" alt="" />
         </div>
       </div>
      </transition-group>
@@ -31,81 +46,108 @@
 </template>
 
 <script>
+import titleBar from '@/components/titleBar.vue'
+// import { Datetime } from 'vue-datetime'
+
 export default {
 data(){
 return{
-    todos:[],
+    tasks:[],
+    date:'',
+    time:'',
     target:null
 }},
-  methods:{
-    addTodo(){ 
-      const todo = document.querySelector("#todo");
-      const newTodo = {
+components:{
+  titleBar
+},
+methods:{
+    addTask(){ 
+      const task = document.querySelector("#todo");
+      const newTask = {
         id: Date.now(),
-        todo: todo.value,
-        isDone:false
+        task: task.value,
+        dueDate:'',
+        dueTime:'',
+        subtasks:[],
+        isDone:false,
+        isPast:false,
+        isNear:false,
       }
-      if(todo.value!=''){
-        this.todos.unshift(newTodo);
-        localStorage.setItem('tasks', JSON.stringify(this.todos))
+      if(task.value!=''){
+        this.tasks.unshift(newTask);
+        localStorage.setItem('tasks', JSON.stringify(this.tasks))
 
       }
-      todo.value=''
+      task.value=''
     },
-    deleteTodo(index){
-      this.todos.splice(index,1);
+    addSubTask(indexOfParent){
+      const newSubTask = {
+        id: Date.now(),
+        task: task.value,
+        dueDate:'',
+        dueTime:'',
+        isDone:false,
+        isPast:false,
+        isNear:false,
+      }
+      this.tasks[indexOfParent].subtasks.unshift(newSubTask)
+    },
+    deleteTask(index){
+      this.tasks.splice(index,1);
       if(document.querySelector('.editMode')){
         document.querySelector('.editMode').classList.remove('editMode')
       }
       document.querySelector("#todo").value = ''
-      localStorage.setItem('tasks', JSON.stringify(this.todos))
+      localStorage.setItem('tasks', JSON.stringify(this.tasks))
     },
-    editTodo(index){
+    editTask(index){
       this.target = index
       const input = document.querySelector("#todo")
-      input.value = this.todos[index].todo
+      input.value = this.tasks[index].task
       document.querySelector('.formArea').classList.add('editMode')
       document.querySelector('#todo').focus()
     },
     saveEdit(){
       const editedTodo = document.querySelector("#todo");
-      this.todos[this.target].todo = editedTodo.value;
+      this.tasks[this.target].task = editedTodo.value;
       editedTodo.value='';
       document.querySelector('.editMode').classList.remove('editMode')
       document.querySelector('.showActions').classList.remove('showActions')
-      localStorage.setItem('tasks', JSON.stringify(this.todos))
+      localStorage.setItem('tasks', JSON.stringify(this.tasks))
     },
     addOrEdit(){
       if(document.querySelector('.formArea').classList.contains('editMode')){
         this.saveEdit()
       }else{
-        this.addTodo()
+        this.addTask()
       }
     },
-    markAsDone(id){
-      const targetID= this.todos.map(todo=>todo.id).indexOf(id)
-      this.todos[targetID].isDone=!this.todos[targetID].isDone
-      console.log(this.todos[targetID].isDone)
-      localStorage.setItem('tasks', JSON.stringify(this.todos))
+    markAsDone(id,e){
+      const targetID= this.tasks.map(task=>task.id).indexOf(id)
+      this.tasks[targetID].isDone=!this.tasks[targetID].isDone;
+      e.currentTarget.parentElement.classList.toggle('task-completed')  
+      console.log(e.currentTarget.parentElement);
+      console.log(this.tasks[targetID].isDone)
+      localStorage.setItem('tasks', JSON.stringify(this.tasks))
 
     },
     showActions(e){
-      let todo;
-      if(e.target.classList.contains('todo')){
-        todo = e.target; 
-        todo.classList.toggle('showActions')
-
-      }else if(e.target.classList.contains('todoName')){
-        todo=e.target.parentElement;      
-        todo.classList.toggle('showActions')
-
-      }
-
+      let task = e.currentTarget;
+       task.classList.toggle('showActions')
     }
   },
   created(){
+    setTimeout(()=>{
+      const taskInput = document.querySelector('#todo');
+      taskInput.addEventListener('focus',()=>{
+        document.body.classList.add('addingTask')
+      })
+      taskInput.addEventListener('focusout',()=>{
+        document.body.classList.remove('addingTask')
+      })
+    },0)
     if(JSON.parse(localStorage.getItem("tasks"))){
-      this.todos = JSON.parse(localStorage.getItem("tasks"))
+      this.tasks = JSON.parse(localStorage.getItem("tasks"))
     }
 
   }
@@ -120,6 +162,62 @@ return{
 }
 body{
   background: #EDE7F6;
+}
+.todoCompleted .rightContainer{
+  border-left: 0.8px solid rgba(157, 166, 168, 0.212);
+
+}
+.rightContainer{
+  margin-left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: 1px solid rgba(157, 166, 168, 0.61);
+  height: 100%;
+  position: relative;
+  padding: 10px;
+}
+.leftContainer{
+  padding: 10px;
+}
+.Info{
+  text-align: center;
+  position: absolute;
+  font-size: 0.8em;
+  bottom: 0px;
+  width: 100%;
+  background: rgb(20, 179, 145);
+  padding: 2px;
+  color: white;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: 0.2s;
+  transition-delay: 0.15s;
+}
+.info{
+  display: none;
+}
+.shownInfo{
+  display: block;
+}
+.completed .Info{
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  transform: scaleY(1);
+}
+#checker{
+  width: 25px;
+  height: 25px;
+  border: 2px solid #8E24AA;
+  border-radius:100%;
+  transition: 0.2s;
+}
+.completed #checker{
+  margin-top: -15px;
+  /* border-radius: 5%; */
+  background: #8E24AA;
 }
 .todosContainer{
   width:100%;
@@ -161,23 +259,6 @@ label{
   min-height: 100px;
   position: relative;
 }
-#checker{
-  width: 25px;
-  height: 25px;
-  border: 2px solid #8E24AA;
-  border-radius:100%;
-  transition: 0.2s ease-out;
-  display: inline-block;
-  position: absolute;
-  right: 10px;
-  top:50%;
-  transform: translateY(-50%)
-}
-.completed{
-  border-radius: 5%;
-  background: #8E24AA;
-  transform: scale(2)
-}
 .bt{
   background: #8E24AA;
   padding: 5px;
@@ -210,9 +291,9 @@ label{
 .todo{
   background: white;
   border-radius: 2px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
   margin: 10px;
-  padding: 10px;
   position: relative;
   font-size: 1.2em;
   font-weight: 300;
@@ -221,7 +302,13 @@ label{
   align-items: center;
   margin-bottom:10px;
   transition: 0.2s ease;
-
+  padding: 0px;
+}
+.todoCompleted .todoName{
+  color: gray;
+}
+.todoCompleted{
+  border-bottom: 2.5px solid rgb(20, 179, 145);
 }
 .id{
   display: none;
@@ -242,6 +329,9 @@ label{
   padding-right: 5px;
   padding-left: 5px;
 }
+.todoCompleted .tactions{
+  border-bottom: 2.5px solid rgb(20, 179, 145);
+}
 .showActions{
   margin-bottom:60px;
   border-top-left-radius: 15px;
@@ -249,6 +339,12 @@ label{
   border-bottom-left-radius: 15px;
   box-shadow: 5px 5px 5px #BDBDBD;
 
+}
+.showActions .Info{
+  border-radius: 10px;
+  font-size: 0.65em;
+  width: 90%;
+  bottom: 3px;
 }
 .showActions .tactions{
   transform: scaleY(1);

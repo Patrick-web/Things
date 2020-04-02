@@ -35,6 +35,10 @@ methods:{
   align-items: center;
   box-shadow: 0px 0px 20px rgba(68, 68, 68, 0.753);
 }
+.note-expanded #addBt{
+  display: none;
+
+}
 .listExpanded #addBt{
   display: none;
 }

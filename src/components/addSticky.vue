@@ -50,7 +50,7 @@ export default {
 <style>
 .saveStickyContainer{
     background:linear-gradient(150deg,#ffffff,rgb(255, 255, 255));
-    height: 360px;
+    height: 280px;
     width: 94vw;
     margin: auto;
     margin-left: 10px;
@@ -83,7 +83,7 @@ export default {
 }
 #noteEntry{
     width: 94%;
-    height: 10%;
+    height: 50%;
     background: rgb(216, 216, 216);
     border-radius: 0px;
     padding: 10px;
@@ -108,7 +108,7 @@ export default {
 }
 .stickyOptions{
     position: relative;
-    margin-top: 10px;
+    margin-top: 0px;
     text-align: center;
     display: flex;
     justify-content: center;

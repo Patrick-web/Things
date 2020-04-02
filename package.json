@@ -9,13 +9,17 @@
   "dependencies": {
     "core-js": "^3.6.4",
     "hammerjs": "^2.0.8",
+    "luxon": "^1.22.2",
     "register-service-worker": "^1.6.2",
     "uuidv4": "^6.0.6",
     "vue": "^2.6.11",
+    "vue-datetime": "^1.0.0-beta.11",
     "vue-router": "^3.1.5",
     "vue2-hammer": "^2.1.2",
     "vue2-timepicker": "^1.0.8",
-    "vuejs-datepicker": "^1.6.2"
+    "vuedraggable": "^2.23.2",
+    "vuejs-datepicker": "^1.6.2",
+    "weekstart": "^1.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.2.0",

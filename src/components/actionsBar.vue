@@ -47,10 +47,14 @@ export default {
     collapseNote(){
       if(document.body.classList.contains('view=Shopping')){
         
+        document.body.classList.remove('addingItem');
+        if(document.querySelector('.expandedList').querySelector('.addShoppingItem')){
+          document.querySelector('.expandedList').querySelector('.addShoppingItem').classList.remove('closeAddBox');
+        }
         document.querySelector('.expandedList').classList.remove('expandedList')
         document.body.classList.remove('listExpanded');
-        document.querySelector('.actions-visible').classList.remove('actions-visible')
-
+        document.querySelector('.actions-visible').classList.remove('actions-visible');
+        
       }else if(document.body.classList.contains('view=Notes')){
         document.querySelector('.note-expanded').querySelector('.saveEditBt').style.transform = "scale(0)"
         document.body.classList.remove('note-expanded')

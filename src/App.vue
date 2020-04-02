@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <div class="view-container">
-      <transition name="slide" enter-active-class="animated fadeIn fast ">
+      <transition name="slide" enter-active-class="animated fadeIn fast">
         <router-view/>
       </transition>
 
@@ -12,25 +12,21 @@
 </template>
 
 <script>
-import stickys from '@/views/stickys.vue'
-import shoppingLists from '@/views/shopping.vue'
-import todo from '@/views/todo.vue'
+import titleBar from '@/components/titleBar.vue'
 import navbar from '@/components/navbar.vue'
 export default {
   components:{
-    stickys,
-    shoppingLists,
-    navbar
+    navbar,
+    titleBar
   },
   methods:{
-    goToReminders(){
-    },
-    goToStickys(){
 
-    },
   },
   created() {
-    
+    // alert("rendered")
+    if(this.$router.currentRoute.path != '/'){
+      this.$router.push('/');
+    }
     document.body.classList.add('view=Notes')
   }
 

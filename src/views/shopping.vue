@@ -1,13 +1,9 @@
 <template>
   <div class="shoppingContainer ">
-      <addShoppingList v-on:addOrEditList="addOrEditList"/>
-
-
-      <div class="titleArea view">
-          <p>Shopping List</p>
-      </div>
+    <titleBar title="Shopping Lists"/>
+    <addShoppingList v-on:addOrEditList="addOrEditList"/>
     <confirmDelete v-on:deleteShopping__="delete__"/>
-   <div style="margin-top:55px" class="listsContainer">
+    <div style="margin-top:55px" class="listsContainer">
 
 
         <div class="addItemBox">
@@ -106,13 +102,15 @@ import confirmDelete from '@/components/confirmDelete.vue'
 import addShoppingList from '@/components/addShoppingList.vue'
 import actionsBar from '@/components/actionsBar.vue'
 import addBt from '@/components/addBt.vue'
+import titleBar from '@/components/titleBar.vue'
 
 export default {
 components:{
     confirmDelete,
     addShoppingList,
     addBt,
-    actionsBar
+    actionsBar,
+    titleBar
 },
 data(){
     return{
@@ -145,9 +143,13 @@ data(){
             list.classList.add('expandedList')
             document.body.classList.add('listExpanded')
             list.classList.add('actions-visible');
-            // setTimeout(()=>{
-            //     list.classList.remove('actions-visible');
-            // },2000)
+            if(!e.target.classList.contains('addShoppingItem')){
+                this.removeFocus();
+                document.body.classList.remove('addingItem')
+                document.querySelector('.expandedList').querySelector('.addShoppingItem').classList.remove('closeAddBox');
+
+            }              
+
 
         },
         addOrEditList(list,index){
@@ -171,7 +173,19 @@ data(){
             document.querySelector('#updateItemBt').style.zIndex = "-1";
             document.body.classList.toggle('addingItem')
             e.target.classList.toggle('closeAddBox');
-            document.querySelector('#itemName').focus()
+            if(!e.target.classList.contains('closeAddBox')){
+                this.removeFocus()
+            }else{
+                document.querySelector('#itemName').focus()
+            }
+        },
+        removeFocus(){
+            const itemInput = document.querySelector('#itemName')
+            const itemPrice = document.querySelector('#price')
+            const itemAmount = document.querySelector('#amount');
+            const inputsArray = [itemInput,itemPrice,itemAmount];
+            inputsArray.forEach((input)=>{input.blur()})
+
         },
         showOptions(e){
             const itemSelected = event.currentTarget.parentElement;
@@ -319,6 +333,15 @@ data(){
           this.shoppingLists = JSON.parse(localStorage.getItem("shoppingLists"))
       }
       setTimeout(()=>{
+            const addItemBox = document.querySelector('.addItemBox');
+            
+            addItemBox.addEventListener('focusIn',()=>{
+                alert("Oh Yeah")
+            })
+
+
+
+
           const items = document.querySelectorAll('.item');
           items.forEach((item)=>{
               let isAcquired = item.querySelector('#isAcquired').textContent;
@@ -416,6 +439,7 @@ data(){
         z-index: 6;
         margin-top: 0;
         margin-bottom: 0;
+        min-height: 500px;
         background: #EDE7F6;
     }
     .expandedList .itemsContainer{

@@ -20,7 +20,6 @@ export default {
       document.body.classList.remove('view=Notes');
       document.body.classList.remove('view=Tasks');
       document.body.classList.remove('addingSomething');
-      console.log(this.$router.currentRoute.path);
       
       if(this.$router.currentRoute.path != '/shopping'){
         this.$router.push('/shopping')
@@ -73,13 +72,16 @@ export default {
   height: 60px;
   width: 95%;
   left:50%;
-  border-radius: 10px;
+  border-radius: 30px;
   transform:translateX(-50%);
   bottom: 5px;
   z-index: 5;
   transition: 0.3s ease-out all;
   display:flex;
   box-shadow: 0px -2px 8px rgba(128, 128, 128, 0.623);
+}
+.addingTask #nav{
+  display: none;
 }
 .note-expanded #nav{
   bottom:-20%;
@@ -129,10 +131,10 @@ export default {
 }
 
 #shoppingIcon{
-  left:10px;
+  left:15px;
 }
 #tasksIcon{
-  right:13px;
+  right:15px;
 }
 .indicatorBar{
   position: absolute;
@@ -149,11 +151,11 @@ export default {
 }
 .current-shopping .indicatorBar{
   border-top-left-radius: 0px;
-  border-bottom-right-radius: 20px;
-  border-top-right-radius: 20px;
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
   border-bottom-left-radius: 0px;
   height: 80%;
-  width: 60px;
+  width: 70px;
   left: 8.5%;
   top:5px;
 

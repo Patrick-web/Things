@@ -106,6 +106,7 @@ created(){
     .expand{
         position: fixed;
         height: 94vh;
+        /* min-height: 500px; */
         width: 96vw;
         border-bottom-left-radius: 15px;
         border-bottom-right-radius: 15px;
@@ -115,6 +116,7 @@ created(){
         margin-top: 0;
         z-index: 8;
         padding-bottom: 50px;
+        margin-bottom: 0px;
     }
     .expand .bar{
         height: 35px;
