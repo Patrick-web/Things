@@ -5,7 +5,7 @@
     <div  accept-charset="utf-8" class="formArea">
       <label for="to-do" style="font-weight:300">Task</label>
       <input style="font-weight:300" v-on:keyup.enter="addOrEdit"  type="text" name="todo" id="todo" value="" />
-      <div class="pickerArea">
+      <!-- <div class="pickerArea">
         <div class="datePicker picker">
           <img src="@/assets/clock.svg" alt="">
           <datetime type="time" 
@@ -24,7 +24,7 @@
           v-model="date">
           </datetime>
         </div>
-      </div>
+      </div> -->
       <p v-on:click="addTask" id="addBt" class="bt">Add</p>
       <p id="editBtn" v-on:click="saveEdit" class="bt">Save Edit</p>
       <p id="subEditBtn" v-on:click="saveSubtaskEdit" class="bt">Save Edit</p>
@@ -264,7 +264,7 @@ methods:{
           const completedtask = this.tasks[taskIndex];
           this.tasks.splice(taskIndex,1);
           this.tasks.push(completedtask)
-        },1000)
+        },500)
         this.tasks[taskIndex].subtasks.forEach((subtask)=>{
           // this.subtasksPreviousState.push(subtask.isDone) // store previous state just incase one made a mistake of maring all as done
           subtask.isDone = true
@@ -372,7 +372,7 @@ body{
   padding: 10px;
 }
 .colapseSubs{
-  margin-bottom: 50px;
+  margin-bottom: 60px !important;
 }
 .colapseSubs .subTasksContainer{
   /* transform: scaleY(0); */
@@ -385,7 +385,7 @@ body{
   margin-top: -10px;
   margin-left: 10px;
   display: flex;
-  align-items: center;
+  justify-content: flex-end;
   width: 97%;
   background: linear-gradient(180deg,lavender,rgba(255, 248, 218, 0.397));
   transition: 0.2s all;
@@ -557,6 +557,7 @@ label{
 .todo{
   margin: 10px;
   margin-top: 0px;
+  transition: 0.2s;
 }
 .maintodo{
   background: white;
@@ -593,7 +594,6 @@ label{
   transition: 0.2s ease;
   padding: 0px;
   margin-top: 8px;
-  margin-left: 20px;
   margin-right: 0px;
   font-size: 1.1em;
 }
