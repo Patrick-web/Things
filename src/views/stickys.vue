@@ -48,20 +48,21 @@ export default {
                 document.querySelector('.note-expanded').querySelector('.saveEditBt').style.transform = "scale(0)"
             },500)
             const targetSticky = document.querySelector('.expand');
-            const updatedNote = targetSticky.querySelector('textarea').value
-            const id = targetSticky.querySelector('#noteId').textContent;
-            this.notes.forEach((note)=>{
-                if(note.id === id){
-                    note.note = updatedNote
-                }
-            })
+            const updatedNote = targetSticky.querySelector('textarea').value;
+            if(updatedNote){
+                const id = targetSticky.querySelector('#noteId').textContent;
+                this.notes.forEach((note)=>{
+                    if(note.id === id){
+                        note.note = updatedNote
+                    }
+                })
 
-            document.body.classList.remove('note-expanded')
-            document.querySelector('.expand').classList.remove('expand');
-
-            let notesStorage;
-            notesStorage = [...this.notes]
-            localStorage.setItem('stickynotes',JSON.stringify(notesStorage));
+                document.body.classList.remove('note-expanded');
+                document.querySelector('.expand').classList.remove('expand');
+                let notesStorage;
+                notesStorage = [...this.notes]
+                localStorage.setItem('stickynotes',JSON.stringify(notesStorage));
+            }
 
         }
     },

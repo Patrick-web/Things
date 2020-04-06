@@ -102,37 +102,7 @@ import titleBar from '@/components/titleBar.vue'
 export default {
 data(){
 return{
-    tasks:[
-      {
-        id:51515,
-        task:"Do Laundry",
-        dueDate:"2020-01-12",
-        dueTime:null,
-        isDone:false,
-        isPast:true,
-        isNear:false,
-        subtasks:[
-          {
-            id:15151,
-            task:"Iron clothes",
-            dueDate:"2020-01-12",
-            dueTime:null,
-            isDone:false,
-            isPast:true,
-            isNear:false,
-          },
-          {
-            id:5515,
-            task:"Tidy up room",
-            dueDate:"2020-01-12",
-            dueTime:null,
-            isDone:false,
-            isPast:true,
-            isNear:false,
-          },
-        ]
-      }
-],
+    tasks:[],
     date:'',
     time:'',
     target:null,
@@ -145,6 +115,12 @@ components:{
   titleBar
 },
 methods:{
+    removeFocus(){
+      document.querySelector('#todo').blur()
+    },
+    persistToStorage(){
+        localStorage.setItem('tasks', JSON.stringify(this.tasks))
+    },
     resetAll(){
       this.removeSubAddMode()
       this.removeEditSubMode()
@@ -171,8 +147,7 @@ methods:{
       }
       if(task.value!=''){
         this.tasks.unshift(newTask);
-        localStorage.setItem('tasks', JSON.stringify(this.tasks))
-
+        this.persistToStorage()
       }
       task.value=''
     },
@@ -185,6 +160,7 @@ methods:{
         this.removeEditSubMode()
     },
     addSubTask(){
+      
       const newSubTask = {
         id: Date.now(),
         task: this.getInput(),
@@ -194,9 +170,15 @@ methods:{
         isPast:false,
         isNear:false,
       }
-      this.tasks[this.targetTsk].subtasks.unshift(newSubTask);
-      this.tasks[this.targetTsk].isDone = false
-      this.reset();
+      if(this.getInput()){
+        this.tasks[this.targetTsk].subtasks.unshift(newSubTask);
+        this.tasks[this.targetTsk].isDone = false
+        this.reset();
+        this.persistToStorage();
+        this.removeFocus()
+
+      }
+
     },
     removeSubAddMode(){
       if(document.querySelector('.formArea').classList.contains('subAddMode')){
@@ -219,11 +201,14 @@ methods:{
         document.querySelector('.editMode').classList.remove('editMode')
       }
       document.querySelector("#todo").value = ''
-      localStorage.setItem('tasks', JSON.stringify(this.tasks))
+      this.persistToStorage()
+
     },
     deleteSubTask(subIndex,e){
       const mainTaskIndex = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector('.taskIndex').textContent;
       this.tasks[mainTaskIndex].subtasks.splice(subIndex,1); 
+      this.persistToStorage()
+
     },
     editTask(index){
       this.target = index
@@ -254,13 +239,21 @@ methods:{
 
     },
     saveEdit(){
-      this.tasks[this.target].task = this.getInput()
-      this.reset()
-      localStorage.setItem('tasks', JSON.stringify(this.tasks))
+      if(this.getInput()){
+        this.tasks[this.target].task = this.getInput()
+        this.persistToStorage()
+        this.removeFocus()
+        this.reset()
+      }
     },
     saveSubtaskEdit(){
-      this.tasks[this.targetMaintask].subtasks[this.targetSubtask].task = this.getInput();
-      this.reset()
+      if(this.getInput()){
+        this.tasks[this.targetMaintask].subtasks[this.targetSubtask].task = this.getInput();
+        this.persistToStorage()
+        this.removeFocus()
+        this.reset()
+
+      }
 
     },
     getInput(){
@@ -307,16 +300,24 @@ methods:{
           this.tasks.push(completedtask)
         },500)
         this.tasks[taskIndex].subtasks.forEach((subtask)=>{
-          // this.subtasksPreviousState.push(subtask.isDone) // store previous state just incase one made a mistake of maring all as done
           subtask.isDone = true
         })
       }
-      localStorage.setItem('tasks', JSON.stringify(this.tasks))
-
+      this.persistToStorage()
     },
     markSubAsDone(subIndex,e){
       const mainTaskindex = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector('.taskIndex').textContent;
       this.tasks[mainTaskindex].subtasks[subIndex].isDone = !this.tasks[mainTaskindex].subtasks[subIndex].isDone;
+      
+      if(this.tasks[mainTaskindex].subtasks[subIndex].isDone){
+        setTimeout(()=>{
+          const completedtask = this.tasks[mainTaskindex].subtasks[subIndex];
+          this.tasks[mainTaskindex].subtasks.splice(subIndex,1);
+          this.tasks[mainTaskindex].subtasks.push(completedtask)
+        },500)
+      }
+
+
       let allSubsDone = true;
       this.tasks[mainTaskindex].subtasks.forEach((sub)=>{
         if(!sub.isDone){
@@ -328,6 +329,8 @@ methods:{
       }else{
         this.tasks[mainTaskindex].isDone = true;
       }
+
+      this.persistToStorage()
     },
     showActions(e){
       let task = e.currentTarget.querySelector('.maintodo');
@@ -354,7 +357,7 @@ methods:{
       })
     },0)
     if(JSON.parse(localStorage.getItem("tasks"))){
-      // this.tasks = JSON.parse(localStorage.getItem("tasks"))
+      this.tasks = JSON.parse(localStorage.getItem("tasks"))
     }
 
   }
@@ -418,6 +421,7 @@ body{
   opacity: 0.5;
   margin-top: -60px;
   border-top-left-radius: 10px;
+  pointer-events:none;
   /* height:0; */
 }
 .subTasksContainer{

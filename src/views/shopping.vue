@@ -35,7 +35,7 @@
           <p class="listTitle">{{list.name}}</p>
           <p class="listBudget" style="display:none">{{list.budget}}</p>
           <div class="btWrapper" style="display:flex;align-items:center;justify-content:center">
-            <img class="addShoppingItem" v-on:click="showAddBox(list.id,$event)" src="@/assets/plus.svg" alt="">
+            <img class="addShoppingItem" v-on:click.stop="showAddBox(list.id,$event)" src="@/assets/plus.svg" alt="">
           </div>
           <div  class="itemsContainer">
               <br>
@@ -43,7 +43,7 @@
               <div  v-bind:key="item.id" v-for="(item,index) in list.items" class="item">
                 <p style="display:none">{{index}}</p>
               <div class="options">
-                  <img v-on:click="showEditBox(item.id,list.id)" src="@/assets/editIcon.svg" alt="">
+                  <img v-on:click.stop="showEditBox(item.id,list.id)" src="@/assets/editIcon.svg" alt="">
                   <img v-on:click="showConfirmBox(item.id,list.id)" src="@/assets/trashIcon.svg" alt="">
               </div>
                 <div v-on:click="showOptions($event)"  class="leftContainer">
@@ -234,6 +234,7 @@ data(){
         },
         showEditBox(itemID,listID){
             document.body.classList.toggle('addingItem');
+            // alert("Pause Execution")
             document.querySelector('#updateItemBt').style.zIndex = "3";
             const tg = document.querySelector('.expandedList');
             const tgAddBt  = tg.querySelector('.addShoppingItem');

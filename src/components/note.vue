@@ -10,7 +10,7 @@
           <p id="noteId">{{note.id}}</p>
           <textarea v-model="note.note" v-on:keyup="showSaveIcon($event)" id="actualtxtarea" class="txtArea"  name="" cols="30" rows="20">
           </textarea>
-          <actionsBar class="actions" v-on:updateNote="$emit(updateNote)"/>
+          <actionsBar class="actions" v-on:updateNote.stop="$emit(updateNote)"/>
           <div class="saveEditBt" v-on:click="$emit('updateNote')" style="position:absolute;right:15px;top:45px">
             <img src="@/assets/save.svg"  alt="">
           </div>
@@ -81,8 +81,8 @@ created(){
     }
     .saveEditBt{
         background: rgba(0, 128, 0, 0.171);
-        width: 60px;
-        height: 60px;
+        width: 45px;
+        height: 45px;
         /* padding: 10px; */
         border-radius: 100%; 
         display: flex;
@@ -92,7 +92,7 @@ created(){
         transition: 0.2s;
     }
     .saveEditBt img{
-        width: 35px;
+        width: 25px;
     }
     .note{
         background:#f5f8fa;
