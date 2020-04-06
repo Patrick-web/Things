@@ -4,7 +4,7 @@
 
     <div  accept-charset="utf-8" class="formArea">
       <label for="to-do" style="font-weight:300">Task</label>
-      <input style="font-weight:300" v-on:keyup.enter="addOrEdit"  type="text" name="todo" id="todo" value="" />
+      <input style="font-weight:300" v-on:keyup.enter="enterTrigger"  type="text" name="todo" id="todo" value="" />
       <!-- <div class="pickerArea">
         <div class="datePicker picker">
           <img src="@/assets/clock.svg" alt="">
@@ -163,6 +163,14 @@ methods:{
       }
       task.value=''
     },
+    prepareSubAdd(index){
+        this.targetTsk = index
+        document.querySelector('.formArea').classList.add('subAddMode');
+        document.querySelector('#todo').focus()
+        document.querySelector('#todo').value = ''
+        this.removeMainTaskEditMode();
+        this.removeEditSubMode()
+    },
     addSubTask(){
       const newSubTask = {
         id: Date.now(),
@@ -175,13 +183,22 @@ methods:{
       }
       this.tasks[this.targetTsk].subtasks.unshift(newSubTask);
       this.tasks[this.targetTsk].isDone = false
-      this.reset()
+      this.reset();
     },
-    prepareSubAdd(index){
-      this.targetTsk = index
-      document.querySelector('.formArea').classList.add('subAddMode')
-      document.querySelector('#todo').focus()
-
+    removeSubAddMode(){
+      if(document.querySelector('.formArea').classList.contains('subAddMode')){
+        document.querySelector('.formArea').classList.remove('subAddMode')
+      }
+    },
+    removeEditSubMode(){
+      if(document.querySelector('.formArea').classList.contains('editModeSubtask')){
+        document.querySelector('.formArea').classList.remove('editModeSubtask');
+      }
+    },
+    removeMainTaskEditMode(){
+      if(document.querySelector('.formArea').classList.contains('editMode')){
+        document.querySelector('.formArea').classList.remove('editMode');
+      }
     },
     deleteTask(index){
       this.tasks.splice(index,1);
@@ -201,6 +218,8 @@ methods:{
       input.value = this.tasks[index].task
       document.querySelector('.formArea').classList.add('editMode')
       document.querySelector('#todo').focus()
+      this.removeSubAddMode();
+      this.removeEditSubMode();
     },
     editSubTask(subIndex,e){
       const mainTaskIndex = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector('.taskIndex').textContent;
@@ -213,7 +232,12 @@ methods:{
       console.log(mainTaskIndex);
 
       // document.querySelector('.formArea').classList.add('editMode')
-      document.querySelector('.formArea').classList.add('editModeSubtask')
+      document.querySelector('.formArea').classList.add('editModeSubtask');
+      if(document.querySelector('.formArea').classList.contains('editMode')){
+        document.querySelector('.formArea').classList.remove('editMode');
+      }else if (document.querySelector('.formArea').classList.contains('subAddMode')){
+        document.querySelector('.formArea').classList.remove('subAddMode')
+      }
       document.querySelector('#todo').focus()
 
     },
@@ -249,10 +273,15 @@ methods:{
       }
 
     },
-    addOrEdit(){
+    enterTrigger(){
       if(document.querySelector('.formArea').classList.contains('editMode')){
         this.saveEdit()
-      }else{
+      }else if(document.querySelector('.formArea').classList.contains('subAddMode')){
+        this.addSubTask()
+      }else if(document.querySelector('.formArea').classList.contains('editModeSubtask')){
+        this.saveSubtaskEdit()
+      }
+      else{
         this.addTask()
       }
     },
