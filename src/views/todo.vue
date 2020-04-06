@@ -3,6 +3,7 @@
     <titleBar title="Tasks"/>
 
     <div  accept-charset="utf-8" class="formArea">
+      <div v-on:click="resetAll" class="formResetBt">Cancel</div>
       <label for="to-do" style="font-weight:300">Task</label>
       <input style="font-weight:300" v-on:keyup.enter="enterTrigger"  type="text" name="todo" id="todo" value="" />
       <!-- <div class="pickerArea">
@@ -144,6 +145,18 @@ components:{
   titleBar
 },
 methods:{
+    resetAll(){
+      this.removeSubAddMode()
+      this.removeEditSubMode()
+      this.removeMainTaskEditMode()
+      document.querySelector("#todo").value = ''
+      if(document.querySelector('.showActions')){
+        document.querySelector('.showActions').classList.remove('showActions')
+      }
+      if(document.querySelector('.colapseSubs')){
+        document.querySelector('.colapseSubs').classList.remove('colapseSubs')
+      }
+    },
     addTask(){ 
       const task = document.querySelector("#todo");
       const newTask = {
@@ -229,7 +242,6 @@ methods:{
       const input = document.querySelector("#todo")
       input.value = subtask.task
 
-      console.log(mainTaskIndex);
 
       // document.querySelector('.formArea').classList.add('editMode')
       document.querySelector('.formArea').classList.add('editModeSubtask');
@@ -307,7 +319,6 @@ methods:{
       this.tasks[mainTaskindex].subtasks[subIndex].isDone = !this.tasks[mainTaskindex].subtasks[subIndex].isDone;
       let allSubsDone = true;
       this.tasks[mainTaskindex].subtasks.forEach((sub)=>{
-        console.log(sub.isDone);
         if(!sub.isDone){
           allSubsDone = false;
         }
@@ -322,7 +333,6 @@ methods:{
       let task = e.currentTarget.querySelector('.maintodo');
        if(task){
          //Handles showing actions for Maintasks
-         console.log(task.parentElement);
          task.classList.toggle('showActions');
          task.parentElement.classList.toggle('colapseSubs');
        }else{
@@ -685,6 +695,29 @@ label{
   opacity: 0;
   transition: 0.2s all;
 }
+.formResetBt{
+  position: absolute;
+  right: 12px;
+  background: rgb(255, 0, 119);
+  color: white;
+  padding: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 2px;
+  transform: scaleY(0);
+  transition: 0.2s;
+}
+.subAddMode .formResetBt{
+  transform: scaleY(1);
 
+}
+.editMode .formResetBt{
+  transform: scaleY(1);
+
+}
+.editModeSubtask .formResetBt{
+  transform: scaleY(1);
+
+}
 
 </style>
