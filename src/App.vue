@@ -2,76 +2,71 @@
   <div class="main-container">
     <div class="view-container">
       <transition name="slide" enter-active-class="animated fadeIn fast">
-        <router-view/>
+        <router-view />
       </transition>
-
     </div>
     <div class="cover"></div>
-    <navbar/>
+    <navbar />
   </div>
 </template>
 
 <script>
-import titleBar from '@/components/titleBar.vue'
-import navbar from '@/components/navbar.vue'
+import titleBar from "@/components/titleBar.vue";
+import navbar from "@/components/navbar.vue";
 export default {
-  components:{
+  components: {
     navbar,
-    titleBar
+    titleBar,
   },
-  methods:{
-
-  },
+  methods: {},
   created() {
     // alert("rendered")
-    if(this.$router.currentRoute.path != '/'){
-      this.$router.push('/');
+    if (this.$router.currentRoute.path != "/") {
+      this.$router.push("/");
     }
-    document.body.classList.add('view=Notes')
-  }
-
-}
+    document.body.classList.add("view=Notes");
+  },
+};
 </script>
 
 <style>
 @import "./assets/animate.css";
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
+  transition: 0.2s ease-in-out;
 }
-body{
+body {
   background: rgb(218, 216, 216);
   position: relative;
   height: 100vh;
   width: 100%;
 }
 
-
-
-
-.addingSomething .addImg{
+.addingSomething .addImg {
   transform: rotate(225deg);
 }
-.addingSomething #nav{
+.addingSomething #nav {
   display: none;
 }
-#alert,#sticky{
+#alert,
+#sticky {
   position: absolute;
   width: 40px;
   padding: 5px;
 }
-#alert{
+#alert {
   left: 10px;
 }
-#sticky{
+#sticky {
   right: 10px;
   width: 50px;
 }
-.cover{
+.cover {
   position: fixed;
-  top:0;
+  top: 0;
   height: 100vh;
   background: rgba(0, 0, 0, 0.849);
   width: 100%;
@@ -79,19 +74,17 @@ body{
   transform-origin: bottom;
   transition: 50ms;
   z-index: 6;
-
 }
-.note-expanded .cover{
+.note-expanded .cover {
   transform: scaleY(1);
-
 }
-.note-expanded #addBt{
+.note-expanded #addBt {
   display: none;
 }
-.addingSomething .cover{
+.addingSomething .cover {
   transform: scaleY(1);
 }
-.addingSomething .addSticky{
-  top:10px;
+.addingSomething .addSticky {
+  top: 10px;
 }
 </style>

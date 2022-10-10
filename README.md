@@ -1,19 +1,20 @@
-# vue-reminder
+# Todo
 
-## Project setup
-```
-npm install
-```
+## UI Improvement and fixes
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+[ ] Colors
+[ ] Icons
+[x] Rearange the tabs
+[ ] Make responsive on large screen
+[ ] Sticky Add Form in Tasks
+[ ] Collapsibel todos (Expansion Panels)
+[ ] Drag and drop todos
+[ ] Redesign Shopping List item card
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## New features
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[ ] Sync local db to remote db
+
+## Fixes
+
+[x] On Back Button the bottom nav disappears

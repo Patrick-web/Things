@@ -1,31 +1,26 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router';
-import shopping from '@/views/shopping'
-import stickys from '@/views/stickys'
-import todo from '@/views/todo'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import shopping from "@/views/shopping";
+import stickys from "@/views/stickys";
+import todo from "@/views/todo";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path:'/',
-    name:'stickys',
-    component: stickys
+    path: "/",
+    name: "todo",
+    component: todo,
   },
   {
-    path:'/shopping',
-    name:'shopping',
-    component: shopping
+    path: "/shopping",
+    name: "shopping",
+    component: shopping,
   },
-  {
-    path:'/todo',
-    name:'todo',
-    component: todo
-  },
-]
+];
 
 const router = new VueRouter({
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
